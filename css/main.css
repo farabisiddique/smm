@@ -1,0 +1,177 @@
+@font-face {
+    font-family: Cheezy;
+    src: url('../fonts/chieezy_burger/Chieezy\ Burger.ttf');
+}
+
+@font-face {
+    font-family: Ranmor;
+    src: url('../fonts/ranmor/Ranmor.ttf');
+}
+
+body,p,h1,h2,h3,label,span,button,input,select{
+    font-family: Ranmor;
+}
+
+.mainContainer {
+    background: linear-gradient(118deg, #BEE5FF 12.94%, rgba(206, 224, 255, 0.00) 98.1%);
+    /* height: 1080px; */
+    font-family: 'Helvetica Neue', sans-serif;
+    position: relative;
+}
+.mainContainer div{
+    z-index: 100;
+}
+.mainContSvgEllipse{
+    position: absolute;
+    bottom: 100px;
+    right: 0;
+}
+.maintContSvgCurve{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    z-index: 0;
+}
+.webTitle{
+    color: #45AAEE;
+    text-align: left;
+    /* font-family: Cheezy; */
+    font-family: Ranmor;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%; /* 57.6px */
+}
+.navmenu{
+    color: #02025A;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%; /* 48px */
+    font-family: Ranmor;
+    font-size: 23px;
+    
+}
+.signinImgContainer{
+    background-color: #02025a36;
+}
+.bendImgDiv{
+    border-radius: 20px;
+}
+.signinImg{
+    width: 100%;
+    height: 99%;
+}
+.coloredText{
+    color: #02025A;
+    /* font-family: Poppins; */
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%; /* 48px */
+}
+.formInputField{
+    border-radius: 30px !important;
+    border: 1px solid #315CA3;
+    background: #FFF;
+    box-shadow: 0px 4px 6px 0px rgba(158, 157, 161, 0.22);
+}
+.input-group .input-group-text {
+    
+    position: absolute;
+    right: 0;
+    z-index: 10;
+    pointer-events: none; /* Makes the icon non-interactive */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: 0px;
+    
+}
+.eyebtn{
+    /* cursor: pointer; */
+    background: green;
+}
+
+.input-group .formInputField {
+    padding-right: 30px; /* Adjust the right padding to make room for the icon */
+}
+
+.signinupBtn{
+    border-radius: 30px;
+    background: linear-gradient(253deg, #45AAEE 28.76%, #02025A 95.12%);
+    box-shadow: 0px 2px 14px 0px #D9CFF6;
+    font-family: Ranmor;
+}
+
+.dashmenu{
+    border-radius: 8px;
+    background: linear-gradient(254deg, #325AAB 28.16%, #45AAEE 93.75%);
+    display: flex;
+    width: 140px;
+    height: 40px;
+    padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    font-size: 15px;
+}
+
+.serviceContainer{
+    position: relative;
+}
+
+.serviceVector{
+    position: absolute;
+    top: 33px;
+    left: -85px;
+}
+.serviceBoxContainer{
+    z-index: 100;
+}
+
+.serviceBox{
+    width: 140px;
+    height: 100px;
+    border-radius: 10px;
+    background: #EAF0FF;
+    box-shadow: 0px 4px 4px 0px rgba(95, 91, 91, 0.13);
+    padding: 19px 8px 8px 8px;
+    position: relative;
+    cursor: pointer;
+
+}
+
+.serviceBox:hover{
+    background-color: blue;
+    color: white;
+}
+
+
+.serviceBoxVector{
+    position: absolute;
+    top: 13px;
+    left: 30px;
+}
+.service{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.serviceLogo{
+    width: 29px;
+    height: 29px;
+}
+
+.dashFormLabel{
+    color: #02025A;
+    font-size: 14px;
+}
+
+  

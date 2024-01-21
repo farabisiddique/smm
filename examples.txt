@@ -1,0 +1,47 @@
+// Examples
+
+$api = new Api();
+
+$services = $api->services(); # Return all services
+
+$balance = $api->balance(); # Return user balance
+
+// Add order
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 100, 'runs' => 2, 'interval' => 5]); # Default
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 100, 'keywords' => "test, testing"]); # SEO
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'comments' => "good pic\ngreat photo\n:)\n;)"]); # Custom Comments
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'usernames' => "test\nexample\nfb"]); # Mentions Custom List
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 100, 'hashtag' => "test"]); # Mentions Hashtag
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 1000, 'username' => "test"]); # Mentions User Followers
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 1000, 'media' => "http://example.com/p/Ds2kfEr24Dr"]); # Mentions Media Likers
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test']); # Package
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 100, 'runs' => 10, 'interval' => 60]); # Drip-feed
+
+// Old posts only
+$order = $api->order(['service' => 1, 'username' => 'username', 'min' => 100, 'max' => 110, 'posts' => 0, 'delay' => 30, 'expiry' => '11/11/2022']); # Subscriptions
+
+// Unlimited new posts and 5 old posts
+$order = $api->order(['service' => 1, 'username' => 'username', 'min' => 100, 'max' => 110, 'old_posts' => 5, 'delay' => 30, 'expiry' => '11/11/2022']); # Subscriptions
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 100, 'answer_number' => '7']); # Poll
+
+$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 100, 'groups' => "group1\ngroup2"]); # Invites from Groups
+
+
+$status = $api->status($order->order); # Return status, charge, remains, start count, currency
+
+$statuses = $api->multiStatus([1, 2, 3]); # Return orders status, charge, remains, start count, currency
+$refill = (array) $api->multiRefill([1, 2]);
+$refillIds = array_column($refill, 'refill');
+if ($refillIds) {
+    $refillStatuses = $api->multiRefillStatus($refillIds);
+}
