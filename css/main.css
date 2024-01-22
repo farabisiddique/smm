@@ -174,4 +174,12 @@ body,p,h1,h2,h3,label,span,button,input,select{
     font-size: 14px;
 }
 
+.dashSelect {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16' viewBox='0 0 24 16' fill='none'%3e%3cpath d='M23.5 0H0.5L12.371 16L23.5 0Z' fill='%2345AAEE'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: 97% center;
+    background-size: 23px 16px;
+}
+
+
   
