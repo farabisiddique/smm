@@ -8,6 +8,20 @@
   src: url('../fonts/ranmor/Ranmor.ttf');
 }
 
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
 body,
 p,
 h1,
@@ -35,7 +49,7 @@ select {
 
 .mainContSvgEllipse {
   position: absolute;
-  bottom: 100px;
+  bottom: 10vh;
   right: 0;
 }
 
@@ -157,6 +171,7 @@ select {
 
 .serviceBoxContainer {
   z-index: 100;
+  /* border: 1px solid black; */
 }
 
 .serviceBox {
@@ -172,7 +187,14 @@ select {
 }
 
 .serviceBox:hover {
-  background-color: blue;
+  background: linear-gradient(253deg, #45AAEE 28.76%, #02025A 95.12%);
+  color: white;
+  animation: bounce 0.5s;
+
+}
+
+.serviceBoxActive {
+  background: linear-gradient(253deg, #45AAEE 28.76%, #02025A 95.12%);
   color: white;
 }
 
