@@ -40,11 +40,16 @@ select {
   /* height: 1080px; */
   font-family: 'Helvetica Neue', sans-serif;
   position: relative;
-  height: 100vh
+  min-height: 100vh;
+}
+
+.mainNav {
+  /* background: white; */
+  z-index: 101 !important;
 }
 
 .mainContainer div {
-  z-index: 100;
+  z-index: 1;
 }
 
 .mainContSvgEllipse {
@@ -168,6 +173,16 @@ select {
   top: 33px;
   left: -85px;
 }
+
+@media (max-width: 767px) {
+  .serviceVector {
+    position: absolute;
+    top: 33px;
+    left: -85px;
+    transform: rotate(-90deg);
+  }
+}
+
 
 .serviceBoxContainer {
   z-index: 100;

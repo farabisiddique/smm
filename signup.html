@@ -15,27 +15,52 @@
 
 <body>
   <div class="container-fluid p-5 mainContainer">
-    <div class="row mb-5">
-      <div class="col-md-4">
-        <h1 class="webTitle">
-          <a href="./index.php" class="text-decoration-none">Meta <span style="color: #02025A;">BD</span></a>
-        </h1>
+    <nav class="navbar navbar-expand-lg mb-5 mainNav">
+      <div class="container-fluid">
+
+        <a class="navbar-brand webTitle" href="./index.php">Meta <span style="color: #02025A;">BD</span></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="offcanvas offcanvas-start z-3" tabindex="-1" id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h1 class="offcanvas-title webTitle" id="offcanvasNavbarLabel">
+              <a href="./index.php" class="text-decoration-none">Meta <span style="color: #02025A;">BD</span></a>
+            </h1>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body d-lg-flex justify-content-lg-end">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item me-4 mb-2">
+                <a class="nav-link navmenu" href="#">All Services</a>
+              </li>
+              <li class="nav-item me-4 mb-2">
+                <a class="nav-link navmenu" href="#">Terms of Service</a>
+              </li>
+              <li class="nav-item me-5 mb-2">
+                <a class="nav-link navmenu" href="#">FAQ</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="btn btn-outline-success text-decoration-none navmenu " href="./index.html">Log In</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="col-md-8 d-flex justify-content-end align-items-center">
-        <a href="#" class="text-decoration-none me-4 navmenu">All Services</a>
-        <a href="#" class="text-decoration-none me-4 navmenu">Terms of Service</a>
-        <a href="#" class="text-decoration-none me-5 navmenu">FAQ</a>
-        <a href="./login.php" class="btn btn-outline-success text-decoration-none me-3 navmenu">Log In</a>
-      </div>
-    </div>
+    </nav>
+
     <div class="row d-flex justify-content-center align-items-center">
-      <div class="col-md-4 ps-0 me-4 bendImgDiv signinImgContainer">
+      <div class="col-md-4 ps-0 me-lg-4 bendImgDiv signinImgContainer">
         <img src="./img/sign-up-form-button-graphic-concept.png" alt="signin image" class="bendImgDiv signinImg">
       </div>
-      <div class="col-md-5 ms-4 d-flex justify-content-center align-items-center border">
+      <div class="col-md-5 ms-lg-4 mt-3 pt-3 d-flex justify-content-center align-items-center border">
         <div class="row">
           <h2 class="text-center coloredText">Create An Account</h2>
-          <p class="text-center" style="font-size: 28px;">Already have an account? <a href="./login.php"
+          <p class="text-center" style="font-size: 28px;">Already have an account? <a href="./index.html"
               class="text-decoration-none coloredText">Log In</a></p>
           <form>
             <div class="mb-3">

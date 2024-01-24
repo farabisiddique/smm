@@ -15,87 +15,146 @@
 
 <body>
   <div class="container-fluid p-5 mainContainer">
-    <div class="row mb-5">
+    <!-- <div class="row mb-5">
       <div class="col-md-4">
         <h1 class="webTitle">
           <a href="./index.php" class="text-decoration-none">Meta <span style="color: #02025A;">BD</span></a>
         </h1>
       </div>
       <div class="col-md-8 d-flex justify-content-end align-items-center">
-        <a href="#" class="text-decoration-none me-5 navmenu">Jackey</a>
-        <a href="#" class="text-decoration-none me-5 navmenu">$<span>45.00</span></a>
-        <a href="#" class="btn text-light text-decoration-none me-5 navmenu dashmenu">Orders</a>
-        <a href="#" class="btn text-light text-decoration-none me-5 navmenu dashmenu">Add Fund</a>
+        <a href="#" class="text-decoration-none me-4 navmenu">Jackey</a>
+        <a href="#" class="text-decoration-none me-4 navmenu">$<span>45.00</span></a>
+        <a href="./dashboard.html" class="btn text-light text-decoration-none me-4 navmenu dashmenu">Dashboard</a>
+        <a href="#" class="btn text-light text-decoration-none me-4 navmenu dashmenu">Orders</a>
+        <a href="#" class="btn text-light text-decoration-none me-4 navmenu dashmenu">Add Fund</a>
         <a href="#" class="btn text-light text-decoration-none navmenu dashmenu">Your Profile</a>
       </div>
-    </div>
-    <div class="row ps-3 mb-5">
+    </div> -->
 
-      <div class="col-md-3 p-0 d-flex justify-content-center align-items-center">
-        <h3>Add Your Fund </h3>
+    <nav class="navbar navbar-expand-lg mb-5 mainNav">
+      <div class="container-fluid">
+
+        <a class="navbar-brand webTitle" href="./index.php">Meta <span style="color: #02025A;">BD</span></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="offcanvas offcanvas-start z-3" tabindex="-1" id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h1 class="offcanvas-title webTitle" id="offcanvasNavbarLabel">
+              <a href="./index.php" class="text-decoration-none">Meta <span style="color: #02025A;">BD</span></a>
+            </h1>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body d-lg-flex justify-content-lg-end">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item me-4 mb-2">
+                <a href="#" class="text-decoration-none me-4 navmenu">Jackey</a>
+              </li>
+              <li class="nav-item me-4 mb-2">
+                <a href="#" class="text-decoration-none me-4 navmenu">$<span>45.00</span></a>
+              </li>
+              <li class="nav-item me-4 mb-2">
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu"
+                  href="./dashboard.html">Dashboard</a>
+              </li>
+              <li class="nav-item me-4 mb-2">
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="#">Orders</a>
+              </li>
+              <li class="nav-item me-5 mb-2">
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.html">Add Fund</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="btn text-light text-decoration-none navmenu dashmenu" href="#">Your Profile</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="col-md-4"></div>
-      <div class="col-md-2">
-        <button class="btn btn-primary w-100 signinupBtn">Payment Instruction</button>
-      </div>
-    </div>
+    </nav>
+
     <div class="row ps-3 mb-5">
-      <form class="p-2">
-        <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
-            <label class="dashFormLabel">Payment Method:</label>
+      <div class="col-md-7">
+        <div class="row p-0 d-flex justify-content-center align-items-center">
+          <h3>Add Your Fund </h3>
+        </div>
+        <div class="row">
+          <form class="p-2">
+            <div class="row ps-3 mb-3">
+              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                <label class="dashFormLabel">Payment Method:</label>
+              </div>
+              <div class="col-md-5">
+                <select class="form-select formInputField dashSelect" id="paymntMthd" name="paymntMthd">
+
+                  <option value="1">Bkash</option>
+                  <option value="2">Nagad</option>
+                  <option value="3">Rocket</option>
+                </select>
+
+              </div>
+            </div>
+
+            <div class="row ps-3 mb-3">
+              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                <label class="dashFormLabel mb-lg-4">Amount:</label>
+              </div>
+              <div class="col-md-4">
+                <input type="number" class="form-control formInputField" id="fndamnt" name="fndamnt">
+                <div id="emailHelp" class="form-text ms-3">Minimum deposit $1</div>
+              </div>
+            </div>
+            <div class="row ps-3 mb-3">
+              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                <label class="dashFormLabel">Fee:</label>
+              </div>
+              <div class="col-md-4">
+                <input type="number" class="form-control formInputField" id="fndfee" name="fndfee" disabled>
+              </div>
+
+            </div>
+            <div class="row ps-3 mb-3">
+              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                <label class="dashFormLabel">Total Amount to be paid(BDT):</label>
+              </div>
+              <div class="col-md-4">
+                <input type="number" class="form-control formInputField" id="fndamntBDT" name="fndamntBDT" disabled>
+              </div>
+
+            </div>
+            <div class="row ps-3">
+              <div class="col-md-3"></div>
+              <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100 signinupBtn" id="addFndBtn"
+                  name="addFndBtn">Confirm</button>
+              </div>
+              <div class="col-md-2"></div>
+
+
+
+
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="row">
+          <div class="col-md-5">
+            <button class="btn btn-primary w-100 signinupBtn">Payment Instruction</button>
           </div>
-          <div class="col-md-3">
-            <select class="form-select formInputField dashSelect" aria-label="Default select example">
-
-              <option value="1">Bkash</option>
-              <option value="2">Nagad</option>
-              <option value="3">Rocket</option>
-            </select>
-
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-12 border border-3">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo doloribus corrupti alias nemo fuga iusto
+            impedit magni dolores, perferendis eaque reiciendis, distinctio quia. Nam veritatis unde, nesciunt ipsa nemo
+            at.
           </div>
         </div>
 
-        <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
-            <label class="dashFormLabel mb-4">Amount:</label>
-          </div>
-          <div class="col-md-2">
-            <input type="number" class="form-control formInputField" id="exampleFormControlInput1">
-            <div id="emailHelp" class="form-text ms-3">Minimum deposit $1</div>
-          </div>
-        </div>
-        <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
-            <label class="dashFormLabel">Fee:</label>
-          </div>
-          <div class="col-md-2">
-            <input type="number" class="form-control formInputField" id="exampleFormControlInput1">
-          </div>
-
-        </div>
-        <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
-            <label class="dashFormLabel">Total Amount to be paid(BDT):</label>
-          </div>
-          <div class="col-md-2">
-            <input type="number" class="form-control formInputField" id="exampleFormControlInput1">
-          </div>
-
-        </div>
-        <div class="row ps-3">
-          <div class="col-md-3"></div>
-          <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100 signinupBtn">Confirm</button>
-          </div>
-          <div class="col-md-2"></div>
-
-
-
-
-        </div>
-
-      </form>
+      </div>
     </div>
 
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"
@@ -180,7 +239,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="./js/showHidePass.js"></script>
 </body>
 
 </html>
