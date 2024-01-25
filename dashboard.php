@@ -147,7 +147,7 @@
     <div class="row ps-3 mb-5">
       <form class="p-2">
         <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
+          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
             <label class="dashFormLabel">Order Category:</label>
           </div>
           <div class="col-md-6">
@@ -160,7 +160,7 @@
           </div>
         </div>
         <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
+          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
             <label class="dashFormLabel">Service:</label>
           </div>
           <div class="col-md-6">
@@ -172,22 +172,21 @@
           </div>
         </div>
         <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
+          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
             <label class="dashFormLabel">Link:</label>
           </div>
           <div class="col-md-6">
             <input type="text" class="form-control formInputField" id="pageLnk" name="pageLnk" placeholder="Link">
-
           </div>
         </div>
         <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
+          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
             <label class="dashFormLabel">Quantity:</label>
           </div>
           <div class="col-md-2">
             <input type="number" class="form-control formInputField" id="followQty" name="followQty">
           </div>
-          <div class="col-md-2 p-0 d-flex justify-content-end align-items-center">
+          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
             <label class="dashFormLabel">Total Amount:</label>
           </div>
           <div class="col-md-2">

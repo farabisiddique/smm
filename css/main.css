@@ -174,15 +174,6 @@ select {
   left: -85px;
 }
 
-@media (max-width: 767px) {
-  .serviceVector {
-    position: absolute;
-    top: 33px;
-    left: -85px;
-    transform: rotate(-90deg);
-  }
-}
-
 
 .serviceBoxContainer {
   z-index: 100;
