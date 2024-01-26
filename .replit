@@ -1,4 +1,5 @@
 hidden=[".config"]
+run = "cowsay Configure me!"
 
 # hosting is currently hardcoded for this language
 # [hosting]
