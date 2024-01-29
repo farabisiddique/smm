@@ -43,6 +43,7 @@ else{
 
 <body>
   <div class="container-fluid p-5 mainContainer">
+
     <nav class="navbar navbar-expand-lg mb-5 mainNav">
       <div class="container-fluid">
 
@@ -95,86 +96,10 @@ else{
         </div>
       </div>
     </nav>
-
     <div class="row ps-3 mb-5">
-      <div class="col-md-7">
-        <div class="row p-0 d-flex justify-content-center align-items-center">
-          <h3>Add Your Fund </h3>
-        </div>
-        <div class="row">
-          <form class="p-2">
-            <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel">Payment Method:</label>
-              </div>
-              <div class="col-md-5">
-                <select class="form-select formInputField dashSelect" id="paymntMthd" name="paymntMthd">
-
-                  <option value="1">Bkash</option>
-                  <option value="2">Nagad</option>
-                  <option value="3">Rocket</option>
-                </select>
-
-              </div>
-            </div>
-
-            <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel mb-lg-4">Amount:</label>
-              </div>
-              <div class="col-md-4">
-                <input type="number" class="form-control formInputField" id="fndamnt" name="fndamnt">
-                <div id="emailHelp" class="form-text ms-3">Minimum deposit $1</div>
-              </div>
-            </div>
-            <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel">Fee:</label>
-              </div>
-              <div class="col-md-4">
-                <input type="number" class="form-control formInputField" id="fndfee" name="fndfee" disabled>
-              </div>
-
-            </div>
-            <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel">Total Amount to be paid(BDT):</label>
-              </div>
-              <div class="col-md-4">
-                <input type="number" class="form-control formInputField" id="fndamntBDT" name="fndamntBDT" disabled>
-              </div>
-
-            </div>
-            <div class="row ps-3">
-              <div class="col-md-3"></div>
-              <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100 signinupBtn" id="addFndBtn"
-                  name="addFndBtn">Confirm</button>
-              </div>
-              <div class="col-md-2"></div>
-
-
-
-
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="col-md-5">
-        <div class="row">
-          <div class="col-md-5">
-            <button class="btn btn-primary w-100 signinupBtn">Payment Instruction</button>
-          </div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-md-12 border border-3">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo doloribus corrupti alias nemo fuga iusto
-            impedit magni dolores, perferendis eaque reiciendis, distinctio quia. Nam veritatis unde, nesciunt ipsa nemo
-            at.
-          </div>
-        </div>
-
-      </div>
+      <table class="table table-hover">
+        
+      </table>
     </div>
 
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"

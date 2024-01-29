@@ -1,3 +1,28 @@
+<?php 
+
+include './db.php'; // Your database connection file
+if (isset($_COOKIE['rememberMe'])) {
+    $token = $_COOKIE['rememberMe'];
+    $findToken = $conn->prepare("SELECT user_id FROM user_tokens WHERE token = ? AND expires_at > NOW()");
+    $findToken->bind_param("s", $token);
+    $findToken->execute();
+    $result = $findToken->get_result();
+
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        // Log the user in by setting session variables, etc.
+        session_start();
+        $_SESSION['user_id'] = $user['user_id'];
+        // Redirect the user to the dashboard or desired page
+        header("Location: dashboard.php"); 
+        
+    } 
+    else {
+          // Token not valid or expired
+          setcookie("rememberMe", "", time() - 3600, "/"); // Delete the cookie
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,33 +33,15 @@
   <!-- Include Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-
   <link rel="stylesheet" href="./css/main.css">
 
 </head>
 
 <body>
   <div class="container-fluid p-5 mainContainer">
-    <!-- <div class="row mb-5">
-      <div class="col-md-4">
-        <h1 class="webTitle">
-          <a href="./index.php" class="text-decoration-none">Meta <span style="color: #02025A;">BD</span></a>
-        </h1>
-      </div>
-      <div class="col-md-8 d-flex justify-content-end align-items-center">
-        <a href="#" class="text-decoration-none me-4 navmenu">All Services</a>
-        <a href="#" class="text-decoration-none me-4 navmenu">Terms of Service</a>
-        <a href="#" class="text-decoration-none me-5 navmenu">FAQ</a>
-        <a href="./signup.html" class="btn btn-outline-success text-decoration-none me-3 navmenu">Sign Up</a>
-      </div>
-    </div> -->
-
-
     <nav class="navbar navbar-expand-lg mb-5 mainNav">
       <div class="container-fluid">
-
         <a class="navbar-brand webTitle" href="./index.php">Meta <span style="color: #02025A;">BD</span></a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
           aria-controls="offcanvasNavbar">
           <span class="navbar-toggler-icon"></span>
@@ -60,7 +67,7 @@
                 <a class="nav-link navmenu" href="#">FAQ</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="btn btn-outline-success text-decoration-none navmenu " href="./signup.html">Sign
+                <a class="btn btn-outline-success text-decoration-none navmenu " href="./signup.php">Sign
                   Up</a>
               </li>
             </ul>
@@ -79,7 +86,7 @@
       <div class="col-md-5 ms-lg-4 mt-3 pt-3  d-flex justify-content-center align-items-center border">
         <div class="row">
           <h2 class="text-center coloredText">Log In</h2>
-          <p class="text-center" style="font-size: 28px;">Don't have an account? <a href="./signup.html"
+          <p class="text-center" style="font-size: 28px;">Don't have an account? <a href="./signup.php"
               class="text-decoration-none coloredText">Sign Up</a></p>
           <form>
             <div class="mb-3">
@@ -91,11 +98,12 @@
               <label for="password" class="form-label">Password</label>
               <div class="input-group">
                 <input type="password" class="form-control formInputField passShowClass" id="password" name="password"
-                  placeholder="Enter your password">
+                  placeholder="Enter your password" aria-describedby="basic-addon2 basic-addon4">
                 <span class="input-group-text pe-auto eyeBtn" id="basic-addon2" role="button">
                   <i class="bi bi-eye"></i>
                 </span>
               </div>
+              <div class="form-text text-danger mt-2 ps-2 fw-bold loginHelpText" id="basic-addon4"></div>
             </div>
 
 
@@ -121,13 +129,17 @@
         fill="#868AC3" fill-opacity="0.6" />
     </svg>
   </div>
-
+  <div id="circle" class="circle"></div>
   <!-- Include Bootstrap JS and its dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  
+  <script src="https://unpkg.com/kinet@2.2.1/dist/kinet.min.js"></script>
   <script src="./js/showHidePass.js"></script>
+  <script src="./js/loginAjax.js"></script>
 </body>
 
 </html>

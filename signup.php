@@ -1,6 +1,30 @@
+<?php 
+
+include './db.php'; // Your database connection file
+if (isset($_COOKIE['rememberMe'])) {
+    $token = $_COOKIE['rememberMe'];
+    $findToken = $conn->prepare("SELECT user_id FROM user_tokens WHERE token = ? AND expires_at > NOW()");
+    $findToken->bind_param("s", $token);
+    $findToken->execute();
+    $result = $findToken->get_result();
+
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        // Log the user in by setting session variables, etc.
+        session_start();
+        $_SESSION['user_id'] = $user['user_id'];
+        // Redirect the user to the dashboard or desired page
+        header("Location: dashboard.php"); 
+
+    } 
+    else {
+          // Token not valid or expired
+          setcookie("rememberMe", "", time() - 3600, "/"); // Delete the cookie
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,7 +69,7 @@
                 <a class="nav-link navmenu" href="#">FAQ</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="btn btn-outline-success text-decoration-none navmenu " href="./index.html">Log In</a>
+                <a class="btn btn-outline-success text-decoration-none navmenu " href="./index.php">Log In</a>
               </li>
             </ul>
           </div>
@@ -60,7 +84,7 @@
       <div class="col-md-5 ms-lg-4 mt-3 pt-3 d-flex justify-content-center align-items-center border">
         <div class="row">
           <h2 class="text-center coloredText">Create An Account</h2>
-          <p class="text-center" style="font-size: 28px;">Already have an account? <a href="./index.html"
+          <p class="text-center" style="font-size: 28px;">Already have an account? <a href="./index.php"
               class="text-decoration-none coloredText">Log In</a></p>
           <form>
             <div class="mb-3">

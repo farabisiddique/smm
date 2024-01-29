@@ -1,3 +1,31 @@
+<?php 
+
+include './db.php'; // Your database connection file
+if (isset($_COOKIE['rememberMe'])) {
+    $token = $_COOKIE['rememberMe'];
+    $findToken = $conn->prepare("SELECT user_id FROM user_tokens WHERE token = ? AND expires_at > NOW()");
+    $findToken->bind_param("s", $token);
+    $findToken->execute();
+    $result = $findToken->get_result();
+
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        // Log the user in by setting session variables, etc.
+        session_start();
+        $_SESSION['user_id'] = $user['user_id'];
+         
+    } 
+    else {
+          // Token not valid or expired
+          setcookie("rememberMe", "", time() - 3600, "/"); // Delete the cookie
+          session_destroy();
+          header("Location: index.php"); // Redirect to the login page
+    }
+}
+else{
+  header("Location: index.php"); // Redirect to the login page
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,23 +63,31 @@
           <div class="offcanvas-body d-lg-flex justify-content-lg-end">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item me-4 mb-2">
-                <a href="#" class="text-decoration-none me-4 navmenu">Jackey</a>
-              </li>
-              <li class="nav-item me-4 mb-2">
-                <a href="#" class="text-decoration-none me-4 navmenu">$<span>45.00</span></a>
-              </li>
-              <li class="nav-item me-4 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu"
-                  href="./dashboard.html">Dashboard</a>
+                  href="./dashboard.php">Dashboard</a>
               </li>
               <li class="nav-item me-4 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="#">Orders</a>
               </li>
               <li class="nav-item me-5 mb-2">
-                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.html">Add Fund</a>
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.php">Add Fund</a>
               </li>
               <li class="nav-item mb-2">
-                <a class="btn text-light text-decoration-none navmenu dashmenu" href="#">Your Profile</a>
+                <div class="dropdown">
+                    <a class="btn text-light text-decoration-none dropdown-toggle navmenu dashmenu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Your Profile</a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="./logout.php">
+                          <p class="dropdown-item mb-1 ellipsis p-0">Farabi Siddique</p>
+                          <p class="text-center mb-0">$<span>0.00</span></p>
+                        </a>
+                      </li>
+                      <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
+                    </ul>
+                </div>
+                
               </li>
             </ul>
           </div>
@@ -292,6 +328,7 @@
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="./js/dashboard.js"></script>
+  <script src="./js/cursorAnim.js"></script>
 </body>
 
 </html>

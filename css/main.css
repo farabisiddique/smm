@@ -35,6 +35,8 @@ select {
   font-family: Ranmor;
 }
 
+
+
 .mainContainer {
   background: linear-gradient(118deg, #BEE5FF 12.94%, rgba(206, 224, 255, 0.00) 98.1%);
   /* height: 1080px; */
@@ -163,6 +165,20 @@ select {
   flex-shrink: 0;
   font-size: 15px;
 }
+
+.ellipsis {
+    width: 160px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; 
+}
+
+@media screen and (max-width: 767px) {
+    .ellipsis {
+        width: 273px;
+    }
+}
+
 
 .serviceContainer {
   position: relative;
