@@ -10,9 +10,24 @@ if (isset($_COOKIE['rememberMe'])) {
 
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
+        $userid = $user['user_id'];
         // Log the user in by setting session variables, etc.
         session_start();
-        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['user_id'] = $userid;
+
+        $userQuery = $conn->prepare("SELECT * FROM user 
+                                    JOIN balance ON user.user_id = balance.usersid 
+                                    WHERE user_id = ? ");
+        $userQuery->bind_param("i", $userid);
+        $userQuery->execute();
+        $userResult = $userQuery->get_result();
+
+        if ($userResult->num_rows == 1) {
+            $userHere = $userResult->fetch_assoc();
+            $username = $userHere['user_name'];
+            $balance = $userHere['balance_available'];
+
+        }
          
     } 
     else {
@@ -67,7 +82,7 @@ else{
                   href="./dashboard.php">Dashboard</a>
               </li>
               <li class="nav-item me-4 mb-2">
-                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="#">Orders</a>
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./orders.php">Orders</a>
               </li>
               <li class="nav-item me-5 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.php">Add Fund</a>
@@ -78,8 +93,14 @@ else{
                     <ul class="dropdown-menu">
                       <li>
                         <a class="dropdown-item" href="./logout.php">
-                          <p class="dropdown-item mb-1 ellipsis p-0">Farabi Siddique</p>
-                          <p class="text-center mb-0">$<span>0.00</span></p>
+                          <p class="dropdown-item mb-1 ellipsis p-0">
+                            <?php echo $username; ?>
+                          </p>
+                          <p class="text-center mb-0">
+                            $<span>
+                              <?php echo $balance; ?>
+                            </span>
+                          </p>
                         </a>
                       </li>
                       <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->

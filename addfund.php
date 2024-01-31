@@ -10,9 +10,38 @@ if (isset($_COOKIE['rememberMe'])) {
 
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
+        $userid = $user['user_id'];
         // Log the user in by setting session variables, etc.
         session_start();
-        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['user_id'] = $userid;
+      
+        $userQuery = $conn->prepare("SELECT * FROM user 
+                                    JOIN balance ON user.user_id = balance.usersid 
+                                    WHERE user_id = ? ");
+        $userQuery->bind_param("i", $userid);
+        $userQuery->execute();
+        $userResult = $userQuery->get_result();
+
+        if ($userResult->num_rows == 1) {
+            $userHere = $userResult->fetch_assoc();
+            $username = $userHere['user_name'];
+            $balance = $userHere['balance_available'];
+            
+        }
+
+
+        $pmResult = $conn->query("SELECT * FROM payment_methods");
+
+
+        $paymentMethods = array();
+        if ($pmResult->num_rows >0) {
+            while( $pmRow = $pmResult->fetch_assoc() ){
+                array_push($paymentMethods, $pmRow);
+            }
+        }
+        
+      
+        
 
     } 
     else {
@@ -68,7 +97,7 @@ else{
                   href="./dashboard.php">Dashboard</a>
               </li>
               <li class="nav-item me-4 mb-2">
-                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="#">Orders</a>
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./orders.php">Orders</a>
               </li>
               <li class="nav-item me-5 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.php">Add Fund</a>
@@ -79,11 +108,16 @@ else{
                     <ul class="dropdown-menu">
                       <li>
                         <a class="dropdown-item" href="./logout.php">
-                          <p class="dropdown-item mb-1 ellipsis p-0">Farabi Siddique</p>
-                          <p class="text-center mb-0">$<span>0.00</span></p>
+                          <p class="dropdown-item mb-1 ellipsis p-0">
+                            <?php echo $username; ?>
+                          </p>
+                          <p class="text-center mb-0">
+                            $<span>
+                              <?php echo $balance;  ?>
+                            </span>
+                          </p>
                         </a>
                       </li>
-                      <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
                     </ul>
@@ -104,32 +138,44 @@ else{
         <div class="row">
           <form class="p-2">
             <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end mt-4">
                 <label class="dashFormLabel">Payment Method:</label>
               </div>
               <div class="col-md-5">
-                <select class="form-select formInputField dashSelect" id="paymntMthd" name="paymntMthd">
-
-                  <option value="1">Bkash</option>
-                  <option value="2">Nagad</option>
-                  <option value="3">Rocket</option>
+                
+                <select class="vodiapicker formInputField dashSelect" id="paymntMthd" name="paymntMthd" required>
+                      <?php 
+                          foreach($paymentMethods as $paymentMethod){
+                            echo '<option value="'.$paymentMethod["pm_id"].'" 
+                            data-thumbnail="'.$paymentMethod["pm_logo"].'">'.$paymentMethod["pm_name"].'</option>';
+                          }
+                      ?>
                 </select>
 
+                <button class="btn-select p-2 formInputField dashSelect" value=""></button>
+                <div class="b">
+                  <ul id="trayListUl"></ul>
+                </div>
+
               </div>
+
+                    
+
+
             </div>
 
             <div class="row ps-3 mb-3">
               <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel mb-lg-4">Amount:</label>
+                <label class="dashFormLabel mb-lg-4">Amount in Dollars($):</label>
               </div>
               <div class="col-md-4">
-                <input type="number" class="form-control formInputField" id="fndamnt" name="fndamnt">
+                <input type="number" class="form-control formInputField" id="fndamnt" name="fndamnt" min="1" required>
                 <div id="emailHelp" class="form-text ms-3">Minimum deposit $1</div>
               </div>
             </div>
             <div class="row ps-3 mb-3">
               <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel">Fee:</label>
+                <label class="dashFormLabel">Fee in Taka(BDT):</label>
               </div>
               <div class="col-md-4">
                 <input type="number" class="form-control formInputField" id="fndfee" name="fndfee" disabled>
@@ -259,6 +305,8 @@ else{
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./js/addFundSettings.js"></script>
+  <script src="./js/selectWithImage.js"></script>
 </body>
 
 </html>
