@@ -28,7 +28,19 @@ if (isset($_COOKIE['rememberMe'])) {
             $balance = $userHere['balance_available'];
 
         }
-         
+
+        $servicesResult = $conn->query("SELECT * FROM services 
+                                    JOIN service_category ON services.service_cat_id = service_category.service_category_id  
+                                    JOIN service_subcategory ON services.service_subcat_id = service_subcategory.service_subcategory_id");
+
+
+        $allServices = array();
+        if ($servicesResult->num_rows >0) {
+            while( $servicesRow = $servicesResult->fetch_assoc() ){
+                array_push($allServices, $servicesRow);
+            }
+        }
+
     } 
     else {
           // Token not valid or expired
@@ -47,7 +59,7 @@ else{
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meta BD - Dashboard</title>
+  <title>Meta BD - Services</title>
   <!-- Include Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
@@ -108,7 +120,7 @@ else{
                       <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
                     </ul>
                 </div>
-                
+
               </li>
             </ul>
           </div>
@@ -129,7 +141,7 @@ else{
               stroke="#325AAB" stroke-width="2" stroke-dasharray="2 2" />
           </svg>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="1">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -143,7 +155,7 @@ else{
             </div>
           </div>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="2">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -157,7 +169,7 @@ else{
             </div>
           </div>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="3">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -171,7 +183,7 @@ else{
             </div>
           </div>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="4">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -185,7 +197,7 @@ else{
             </div>
           </div>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="5">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -202,70 +214,86 @@ else{
       </div>
     </div>
     <div class="row ps-3 mb-5">
-      <form class="p-2">
-        <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-            <label class="dashFormLabel">Order Category:</label>
-          </div>
-          <div class="col-md-6">
-            <select class="form-select formInputField dashSelect" id="orderCtgry" name="orderCtgry">
-
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-          </div>
-        </div>
-        <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-            <label class="dashFormLabel">Service:</label>
-          </div>
-          <div class="col-md-6">
-            <select class="form-select formInputField dashSelect" id="serviceType" name="serviceType">
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-          </div>
-        </div>
-        <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-            <label class="dashFormLabel">Link:</label>
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control formInputField" id="pageLnk" name="pageLnk" placeholder="Link">
-          </div>
-        </div>
-        <div class="row ps-3 mb-3">
-          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-            <label class="dashFormLabel">Quantity:</label>
-          </div>
-          <div class="col-md-2">
-            <input type="number" class="form-control formInputField" id="followQty" name="followQty">
-          </div>
-          <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-            <label class="dashFormLabel">Total Amount:</label>
-          </div>
-          <div class="col-md-2">
-            <input type="number" class="form-control formInputField" id="totalAmnt" name="totalAmnt" disabled>
-          </div>
-        </div>
-        <div class="row ps-3">
-          <div class="col-md-3"></div>
-          <div class="col-md-3">
-            <button type="submit" class="btn btn-primary w-100 signinupBtn" id="submtOrdr" name="submtOrdr">Submit
-              Order</button>
-          </div>
-          <div class="col-md-2"></div>
-
-
-
-
-        </div>
-
-      </form>
+        <table class="table table-striped  serviceTable">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Service</th>
+              <th scope="col">Rate</th>
+              <th scope="col">Min/Max</th>
+              <th scope="col">Description</th>
+              <th scope="col">Order</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php 
+                foreach($allServices as $aService){
+                    $service_cat_id = $aService['service_cat_id'];
+                    echo '<tr class="serviceRow" data-servicecatid='.$service_cat_id.'>';
+                      echo "<td>".$aService['service_cat_id']."</td>";
+                      echo "<td>".$aService['service_name']."</td>";
+                      echo "<td>".$aService['service_rate']."</td>";
+                      echo "<td>".$aService['service_min']."-".$aService['service_max']."</td>";
+                      echo  '<td>
+                              <button type="button" 
+                                      class="btn btn-primary seeServiceDetails" 
+                                      data-bs-toggle="modal" 
+                                      data-bs-target="#serviceDetailsModal"
+                                      data-servicename="'.$aService['service_name'].'"
+                                      data-servicerate="'.$aService['service_rate'].'"
+                                      data-servicemin="'.$aService['service_min'].'"
+                                      data-servicemax="'.$aService['service_max'].'"
+                              >
+                                See Details
+                              </button>
+                            </td>';
+                      echo  "<td>Order Now</td>";
+                    echo "</tr>";
+                }
+            
+            ?>
+          </tbody>
+        </table>
     </div>
 
+   
+    
+
+    <!-- Modal -->
+    <div class="modal fade" id="serviceDetailsModal" tabindex="-1" aria-labelledby="serviceDetailsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 serviceDetailsModalLabel" id="serviceDetailsModalLabel"></h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 orderModalLabel" id="orderModalLabel"></h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"
       class="maintContSvgCurve">
       <path opacity="0.19" fill-rule="evenodd" clip-rule="evenodd"
@@ -349,6 +377,37 @@ else{
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="./js/dashboard.js"></script>
+  <script>
+      $(".seeServiceDetails").click(function () {
+          // console.log();
+          var serviceName = $(this).data("servicename");
+          var serviceRate = $(this).data("servicerate");
+          var serviceMin = $(this).data("servicemin");
+          var serviceMax = $(this).data("servicemax");
+
+          $(".serviceDetailsModalLabel").html(serviceName);
+      });
+
+    $(".serviceBox").click(function(){
+        // Retrieve the service category id from the clicked serviceBox
+        var servicecatid = $(this).data("servicecat");
+
+        // Iterate over each serviceRow
+        $(".serviceRow").each(function() {
+            // Check if the serviceRow's data-servicecatid matches the clicked serviceBox's servicecatid
+            if ($(this).data("servicecatid") != servicecatid) {
+                // If it doesn't match, hide the serviceRow
+                $(this).hide();
+            } else {
+                // If it does match, show the serviceRow (in case it was previously hidden)
+                $(this).show();
+            }
+        });
+
+        console.log(servicecatid); // Optional: for debugging to see the clicked servicecatid
+    });
+
+  </script>
 </body>
 
 </html>

@@ -1,8 +1,9 @@
 <?php
-$servername = "sql6.freemysqlhosting.net";
-$dbusername = "sql6680492";
-$dbpassword = "vAc4xhWqgp";
-$dbname = "sql6680492";
+include './env.php';
+$servername = HOSTNAME;
+$dbusername = DB_USER;
+$dbpassword = DB_PASS;
+$dbname = DB_NAME;
 global $conn;
 // Create connection
 $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);

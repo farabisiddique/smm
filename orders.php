@@ -47,12 +47,13 @@ else{
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meta BD - Add Fund</title>
+  <title>Meta BD - Orders</title>
   <!-- Include Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
   <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
 
 </head>
 
@@ -118,8 +119,36 @@ else{
       </div>
     </nav>
     <div class="row ps-3 mb-5">
-      <table class="table table-hover">
-        
+      <table id="allOrders" class="display">
+          <thead>
+              <tr>
+                  <th>No</th>
+                  <th>Order ID</th>
+                  <!-- <th>Date</th>
+                  <th>Link</th>
+                  <th>Service</th>
+                  <th>Quantity</th>
+                  <th>Charge</th>
+                  <th>Status</th> -->
+                 
+
+
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td></td>
+                  <td></td>
+                  <!-- <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td> -->
+
+              </tr>
+
+          </tbody>
       </table>
     </div>
 
@@ -205,6 +234,8 @@ else{
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" charset="utf8" src="./js/datatable/orders.js"></script>
 </body>
 
 </html>

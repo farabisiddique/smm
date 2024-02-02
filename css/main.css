@@ -31,7 +31,8 @@ label,
 span,
 button,
 input,
-select {
+select,
+th{
   font-family: Ranmor;
 }
 
@@ -340,4 +341,19 @@ select {
   margin-left: 50px;
 }
 
+.serviceTable{
+  z-index: 101;
+}
+.serviceTable th{
+   font-size: 21px;
+   color: #02025A;
+}
+
+#serviceDetailsModal{
+  z-index: 999;
+}
+
+.modal-backdrop{
+  z-index: 101;
+}
 
