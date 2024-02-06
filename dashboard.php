@@ -1,33 +1,87 @@
 <?php 
 
-include './db.php'; // Your database connection file
+include './db.php';
+include './functions.php';
+function get_services_by_ids($ids,$newProperties) {
+    $api = new Api();
+    $api_services = $api->services(); 
+    $matched_services = []; 
+
+    foreach($api_services as $service) {
+        $service_id = $service->service;
+        if(($key = array_search($service_id, $ids)) !== false) {
+            foreach($newProperties as $properties) {
+                if($properties['service_api_id'] == $service_id) {
+                    foreach($properties as $property => $value) {
+                        $service->$property = $value; 
+                    }
+                    break; 
+                }
+            }
+            $matched_services[] = $service; 
+        }
+    }
+    return $matched_services; 
+}
+
 if (isset($_COOKIE['rememberMe'])) {
     $token = $_COOKIE['rememberMe'];
+    
     $findToken = $conn->prepare("SELECT user_id FROM user_tokens WHERE token = ? AND expires_at > NOW()");
     $findToken->bind_param("s", $token);
     $findToken->execute();
     $result = $findToken->get_result();
-
+    
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
         $userid = $user['user_id'];
+        
         // Log the user in by setting session variables, etc.
         session_start();
         $_SESSION['user_id'] = $userid;
 
         $userQuery = $conn->prepare("SELECT * FROM user 
-                                    JOIN balance ON user.user_id = balance.usersid 
                                     WHERE user_id = ? ");
+        
         $userQuery->bind_param("i", $userid);
         $userQuery->execute();
         $userResult = $userQuery->get_result();
-
+        
+      
         if ($userResult->num_rows == 1) {
             $userHere = $userResult->fetch_assoc();
             $username = $userHere['user_name'];
-            $balance = $userHere['balance_available'];
+            $balance = $userHere['user_balance'];
 
         }
+
+        $serviceSubCatResult = $conn->query("SELECT * FROM service_subcategory");
+
+
+        $allServiceSubCats = array();
+        if ($serviceSubCatResult->num_rows >0) {
+            while( $serviceSubCatRow = $serviceSubCatResult->fetch_assoc() ){
+                array_push($allServiceSubCats, $serviceSubCatRow);
+            }
+        }
+
+      
+
+        $servicesResult = $conn->query("SELECT * FROM services 
+                                    JOIN service_category ON services.service_cat_id = service_category.service_category_id  
+                                    JOIN service_subcategory ON services.service_subcat_id = service_subcategory.service_subcategory_id");
+
+
+        $allServices = array();
+        $allServiceIds = array();
+        if ($servicesResult->num_rows >0) {
+            while( $servicesRow = $servicesResult->fetch_assoc() ){
+                array_push($allServices, $servicesRow);
+                array_push($allServiceIds, $servicesRow['service_api_id']);
+            }
+        }
+
+        $finalServices = get_services_by_ids($allServiceIds,$allServices);
          
     } 
     else {
@@ -77,14 +131,17 @@ else{
           </div>
           <div class="offcanvas-body d-lg-flex justify-content-lg-end">
             <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item me-4 mb-2">
+              <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu"
                   href="./dashboard.php">Dashboard</a>
               </li>
-              <li class="nav-item me-4 mb-2">
-                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./orders.php">Orders</a>
+              <li class="nav-item me-3 mb-2">
+                <a class="btn text-light text-decoration-none me-3 navmenu dashmenu" href="./orders.php">Orders</a>
               </li>
-              <li class="nav-item me-5 mb-2">
+              <li class="nav-item me-3 mb-2">
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./services.php">Services</a>
+              </li>
+              <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.php">Add Fund</a>
               </li>
               <li class="nav-item mb-2">
@@ -92,7 +149,7 @@ else{
                     <a class="btn text-light text-decoration-none dropdown-toggle navmenu dashmenu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Your Profile</a>
                     <ul class="dropdown-menu">
                       <li>
-                        <a class="dropdown-item" href="./logout.php">
+                        <a class="dropdown-item" href="./profile.php">
                           <p class="dropdown-item mb-1 ellipsis p-0">
                             <?php echo $username; ?>
                           </p>
@@ -129,7 +186,7 @@ else{
               stroke="#325AAB" stroke-width="2" stroke-dasharray="2 2" />
           </svg>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="1">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -143,7 +200,7 @@ else{
             </div>
           </div>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="2">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -153,11 +210,11 @@ else{
               <div class="service">
                 <img src="./img/tiktoklogo.png" alt="" class="serviceLogo">
                 <p class="serviceName m-0 mt-3">Tiktok</p>
-              </div>
+              </div> 
             </div>
           </div>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="3">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -171,7 +228,7 @@ else{
             </div>
           </div>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="4">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -185,7 +242,7 @@ else{
             </div>
           </div>
           <div class="col-md-2 serviceBoxContainer p-0 d-flex justify-content-end align-items-center">
-            <div class="serviceBox">
+            <div class="serviceBox" data-servicecat="5">
               <svg xmlns="http://www.w3.org/2000/svg" width="74" height="48" viewBox="0 0 74 48" fill="none"
                 class="serviceBoxVector">
                 <path
@@ -202,17 +259,24 @@ else{
       </div>
     </div>
     <div class="row ps-3 mb-5">
-      <form class="p-2">
+      <form class="p-2" id="addOrder">
         <div class="row ps-3 mb-3">
           <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-            <label class="dashFormLabel">Order Category:</label>
+            <label class="dashFormLabel">Category:</label>
           </div>
           <div class="col-md-6">
-            <select class="form-select formInputField dashSelect" id="orderCtgry" name="orderCtgry">
+            <select class="form-select formInputField dashSelect" id="orderSubCtgry" name="orderSubCtgry">
+                    <option value="">Select a Category</option>
+              <?php
+                  foreach($allServiceSubCats as $aServiceSubCat){
 
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+                    echo '<option
+                            class="serviceSubCatOption"
+                            value="'.$aServiceSubCat['service_subcategory_id'].'"
+                            data-servicecategoryid="'.$aServiceSubCat['service_category_id'].'"
+                          >'.$aServiceSubCat['service_subcategory_name'].'</option>';
+                  }
+              ?>
             </select>
           </div>
         </div>
@@ -221,11 +285,28 @@ else{
             <label class="dashFormLabel">Service:</label>
           </div>
           <div class="col-md-6">
-            <select class="form-select formInputField dashSelect" id="serviceType" name="serviceType">
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+            <select class="form-select formInputField dashSelect" id="serviceType" name="serviceType" required>
+              <option value="">Select a Service</option>
+              <?php 
+                  foreach($finalServices as $aService){
+                      $service_min = $aService->min;
+                      $service_max = $aService->max;
+                      $service_charge = $aService->rate + (($aService->rate*$aService->service_rate_percentage)/100);
+                    
+                      echo '<option 
+                              class="serviceNameOption"
+                              value="'.$aService->service_id.'"
+                              data-servicecatid="'.$aService->service_cat_id.'"
+                              data-serivicesubcatid="'.$aService->service_subcat_id.'"
+                              data-servicecharge="' . $service_charge . '"
+                              data-servicemin="' . $service_min . '"
+                              data-servicemax="' . $service_max . '"
+                            >'.$aService->service_name.'</option>';
+                  }
+              ?>
+              
             </select>
+            
           </div>
         </div>
         <div class="row ps-3 mb-3">
@@ -233,16 +314,21 @@ else{
             <label class="dashFormLabel">Link:</label>
           </div>
           <div class="col-md-6">
-            <input type="text" class="form-control formInputField" id="pageLnk" name="pageLnk" placeholder="Link">
+            <input type="text" class="form-control formInputField" id="pageLnk" name="pageLnk" placeholder="Link" required>
           </div>
         </div>
         <div class="row ps-3 mb-3">
           <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-            <label class="dashFormLabel">Quantity:</label>
+            <label class="dashFormLabel">Quantity:
+              <span id="minQty" class="form-text"></span>
+              <span id="maxQty" class="form-text"></span>
+            </label>
           </div>
           <div class="col-md-2">
-            <input type="number" class="form-control formInputField" id="followQty" name="followQty">
+            <input type="number" class="form-control formInputField" id="followQty" name="followQty" required>
+            
           </div>
+            
           <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
             <label class="dashFormLabel">Total Amount:</label>
           </div>
@@ -258,12 +344,26 @@ else{
           </div>
           <div class="col-md-2"></div>
 
-
-
-
         </div>
 
       </form>
+    </div>
+
+    <div class="modal fade addOrderResponseModal" id="addOrderResponseModal" tabindex="-1" aria-labelledby="addOrderResponseLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title addOrderResponseLabel" id="addOrderResponseLabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body addOrderResponseTxt">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"

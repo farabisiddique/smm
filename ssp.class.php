@@ -265,8 +265,6 @@ class SSP {
        $limit"
     );
 
-    return $data;
-
     // Data set length after filtering
     $resFilterLength = self::sql_exec( $db, $bindings,
       "SELECT COUNT(`{$primaryKey}`)
@@ -319,8 +317,9 @@ class SSP {
    *  @param  string $whereAll WHERE condition to apply to all queries
    *  @return array          Server-side processing response array
    */
-  static function complex ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null )
-  {
+  static function complex ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null,$joinQuery = null )
+  { 
+    
     $bindings = array();
     $db = self::db( $conn );
     $localWhereResult = array();
@@ -349,29 +348,50 @@ class SSP {
       $whereAllSql = 'WHERE '.$whereAll;
     }
 
+    // Construct the JOIN part of the query
+    $joinSql = '';
+    if (!empty($joinQuery) && is_array($joinQuery)) {
+        $joinSql = implode(' ', $joinQuery);
+    }
+
+
     // Main query to actually get the data
-    $data = self::sql_exec( $db, $bindings,
-      "SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
-       FROM `$table`
-       $where
-       $order
+    // $data = self::sql_exec( $db, $bindings,
+    //   "SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
+    //    FROM `$table`
+    //    $where
+    //    $order
+    //    $limit"
+    // );
+
+    $data = self::sql_exec($db, $bindings, 
+      "SELECT `" . implode("`, `", self::pluck($columns, 'db')) . "` 
+       FROM `$table` $joinSql 
+       $where 
+       $order 
        $limit"
     );
 
-    // Data set length after filtering
-    $resFilterLength = self::sql_exec( $db, $bindings,
-      "SELECT COUNT(`{$primaryKey}`)
-       FROM   `$table`
-       $where"
-    );
+
+    // $resFilterLength = self::sql_exec( $db, $bindings,
+    //   "SELECT COUNT(`{$primaryKey}`)
+    //    FROM   `$table`
+    //    $where"
+    // );
+    // $recordsFiltered = $resFilterLength[0][0];
+
+    
+    // $resTotalLength = self::sql_exec( $db, $bindings,
+    //   "SELECT COUNT(`{$primaryKey}`)
+    //    FROM   `$table` ".
+    //   $whereAllSql
+    // );
+    // $recordsTotal = $resTotalLength[0][0];
+
+    $resFilterLength = self::sql_exec($db, $bindings, "SELECT COUNT(`{$primaryKey}`) FROM `$table` $joinSql $where");
     $recordsFiltered = $resFilterLength[0][0];
 
-    // Total data set length
-    $resTotalLength = self::sql_exec( $db, $bindings,
-      "SELECT COUNT(`{$primaryKey}`)
-       FROM   `$table` ".
-      $whereAllSql
-    );
+    $resTotalLength = self::sql_exec($db, $bindings, "SELECT COUNT(`{$primaryKey}`) FROM `$table` $joinSql " . $whereAllSql);
     $recordsTotal = $resTotalLength[0][0];
 
     /*

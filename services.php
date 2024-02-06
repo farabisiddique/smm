@@ -1,6 +1,30 @@
 <?php 
 
-include './db.php'; // Your database connection file
+include './db.php'; 
+include './functions.php';
+
+function get_services_by_ids($ids,$newProperties) {
+    $api = new Api();
+    $api_services = $api->services(); 
+    $matched_services = []; 
+
+    foreach($api_services as $service) {
+        $service_id = $service->service;
+        if(($key = array_search($service_id, $ids)) !== false) {
+            foreach($newProperties as $properties) {
+                if($properties['service_api_id'] == $service_id) {
+                    foreach($properties as $property => $value) {
+                        $service->$property = $value; 
+                    }
+                    break; 
+                }
+            }
+            $matched_services[] = $service; 
+        }
+    }
+    return $matched_services; 
+}
+
 if (isset($_COOKIE['rememberMe'])) {
     $token = $_COOKIE['rememberMe'];
     $findToken = $conn->prepare("SELECT user_id FROM user_tokens WHERE token = ? AND expires_at > NOW()");
@@ -16,7 +40,6 @@ if (isset($_COOKIE['rememberMe'])) {
         $_SESSION['user_id'] = $userid;
 
         $userQuery = $conn->prepare("SELECT * FROM user 
-                                    JOIN balance ON user.user_id = balance.usersid 
                                     WHERE user_id = ? ");
         $userQuery->bind_param("i", $userid);
         $userQuery->execute();
@@ -25,21 +48,26 @@ if (isset($_COOKIE['rememberMe'])) {
         if ($userResult->num_rows == 1) {
             $userHere = $userResult->fetch_assoc();
             $username = $userHere['user_name'];
-            $balance = $userHere['balance_available'];
+            $balance = $userHere['user_balance'];
 
         }
 
         $servicesResult = $conn->query("SELECT * FROM services 
-                                    JOIN service_category ON services.service_cat_id = service_category.service_category_id  
+                                    JOIN service_category ON services.service_cat_id = service_category.service_category_id 
                                     JOIN service_subcategory ON services.service_subcat_id = service_subcategory.service_subcategory_id");
 
 
         $allServices = array();
+        $allServiceIds = array();
         if ($servicesResult->num_rows >0) {
             while( $servicesRow = $servicesResult->fetch_assoc() ){
                 array_push($allServices, $servicesRow);
+                array_push($allServiceIds, $servicesRow['service_api_id']);
             }
         }
+
+      $finalServices = get_services_by_ids($allServiceIds,$allServices);
+      
 
     } 
     else {
@@ -89,14 +117,17 @@ else{
           </div>
           <div class="offcanvas-body d-lg-flex justify-content-lg-end">
             <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item me-4 mb-2">
+              <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu"
                   href="./dashboard.php">Dashboard</a>
               </li>
-              <li class="nav-item me-4 mb-2">
+              <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./orders.php">Orders</a>
               </li>
-              <li class="nav-item me-5 mb-2">
+              <li class="nav-item me-3 mb-2">
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./services.php">Services</a>
+              </li>
+              <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.php">Add Fund</a>
               </li>
               <li class="nav-item mb-2">
@@ -104,7 +135,7 @@ else{
                     <a class="btn text-light text-decoration-none dropdown-toggle navmenu dashmenu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Your Profile</a>
                     <ul class="dropdown-menu">
                       <li>
-                        <a class="dropdown-item" href="./logout.php">
+                        <a class="dropdown-item" href="./profile.php">
                           <p class="dropdown-item mb-1 ellipsis p-0">
                             <?php echo $username; ?>
                           </p>
@@ -115,7 +146,6 @@ else{
                           </p>
                         </a>
                       </li>
-                      <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
                     </ul>
@@ -219,7 +249,7 @@ else{
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Service</th>
-              <th scope="col">Rate</th>
+              <th scope="col">Rate per 1000</th>
               <th scope="col">Min/Max</th>
               <th scope="col">Description</th>
               <th scope="col">Order</th>
@@ -227,27 +257,43 @@ else{
           </thead>
           <tbody>
             <?php 
-                foreach($allServices as $aService){
-                    $service_cat_id = $aService['service_cat_id'];
+                foreach($finalServices as $aService){
+                    $service_cat_id = $aService->service_cat_id;
+                    $service_min = $aService->min;
+                    $service_max = $aService->max;
+                    $service_charge = $aService->rate + (($aService->rate*$aService->service_rate_percentage)/100);
+                  
                     echo '<tr class="serviceRow" data-servicecatid='.$service_cat_id.'>';
-                      echo "<td>".$aService['service_cat_id']."</td>";
-                      echo "<td>".$aService['service_name']."</td>";
-                      echo "<td>".$aService['service_rate']."</td>";
-                      echo "<td>".$aService['service_min']."-".$aService['service_max']."</td>";
+                      echo "<td>".$aService->service_id."</td>";
+                      echo "<td>".$aService->service_name."</td>";
+                      echo "<td>$".$service_charge."</td>";
+                      echo "<td>".$service_min."-".$service_max."</td>";
                       echo  '<td>
                               <button type="button" 
                                       class="btn btn-primary seeServiceDetails" 
                                       data-bs-toggle="modal" 
                                       data-bs-target="#serviceDetailsModal"
-                                      data-servicename="'.$aService['service_name'].'"
-                                      data-servicerate="'.$aService['service_rate'].'"
-                                      data-servicemin="'.$aService['service_min'].'"
-                                      data-servicemax="'.$aService['service_max'].'"
+                                      data-servicename="'.$aService->service_name.'"
+                                      data-servicecharge="' . $service_charge . '"
+                                      data-servicemin="' . $service_min . '"
+                                      data-servicemax="' . $service_max . '"
                               >
                                 See Details
                               </button>
                             </td>';
-                      echo  "<td>Order Now</td>";
+                      echo  '<td>
+                                  <button type="button" 
+                                          class="btn btn-primary placeOrder" 
+                                          data-bs-toggle="modal" 
+                                          data-bs-target="#orderModal"
+                                          data-servicename="'.$aService->service_name.'"
+                                          data-servicecharge="' . $service_charge . '"
+                                          data-servicemin="' . $service_min . '"
+                                          data-servicemax="' . $service_max . '"
+                                  >
+                                    Order Now
+                                  </button>
+                             </td>';
                     echo "</tr>";
                 }
             
@@ -376,38 +422,8 @@ else{
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="./js/dashboard.js"></script>
-  <script>
-      $(".seeServiceDetails").click(function () {
-          // console.log();
-          var serviceName = $(this).data("servicename");
-          var serviceRate = $(this).data("servicerate");
-          var serviceMin = $(this).data("servicemin");
-          var serviceMax = $(this).data("servicemax");
+  <script src="./js/services.js"></script>
 
-          $(".serviceDetailsModalLabel").html(serviceName);
-      });
-
-    $(".serviceBox").click(function(){
-        // Retrieve the service category id from the clicked serviceBox
-        var servicecatid = $(this).data("servicecat");
-
-        // Iterate over each serviceRow
-        $(".serviceRow").each(function() {
-            // Check if the serviceRow's data-servicecatid matches the clicked serviceBox's servicecatid
-            if ($(this).data("servicecatid") != servicecatid) {
-                // If it doesn't match, hide the serviceRow
-                $(this).hide();
-            } else {
-                // If it does match, show the serviceRow (in case it was previously hidden)
-                $(this).show();
-            }
-        });
-
-        console.log(servicecatid); // Optional: for debugging to see the clicked servicecatid
-    });
-
-  </script>
 </body>
 
 </html>

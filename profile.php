@@ -14,7 +14,7 @@ if (isset($_COOKIE['rememberMe'])) {
         // Log the user in by setting session variables, etc.
         session_start();
         $_SESSION['user_id'] = $userid;
-      
+
         $userQuery = $conn->prepare("SELECT * FROM user 
                                     WHERE user_id = ? ");
         $userQuery->bind_param("i", $userid);
@@ -24,21 +24,10 @@ if (isset($_COOKIE['rememberMe'])) {
         if ($userResult->num_rows == 1) {
             $userHere = $userResult->fetch_assoc();
             $username = $userHere['user_name'];
+            $useremail = $userHere['user_email'];
             $balance = $userHere['user_balance'];
-            
-        }
 
-        $pmResult = $conn->query("SELECT * FROM payment_methods");
-
-        $paymentMethods = array();
-        if ($pmResult->num_rows >0) {
-            while( $pmRow = $pmResult->fetch_assoc() ){
-                array_push($paymentMethods, $pmRow);
-            }
         }
-        
-      
-        
 
     } 
     else {
@@ -58,7 +47,7 @@ else{
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meta BD - Add Fund</title>
+  <title>Meta BD - Your Profile</title>
   <!-- Include Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
@@ -69,6 +58,7 @@ else{
 
 <body>
   <div class="container-fluid p-5 mainContainer">
+
     <nav class="navbar navbar-expand-lg mb-5 mainNav">
       <div class="container-fluid">
 
@@ -102,7 +92,6 @@ else{
               <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.php">Add Fund</a>
               </li>
-              
               <li class="nav-item mb-2">
                 <div class="dropdown">
                     <a class="btn text-light text-decoration-none dropdown-toggle navmenu dashmenu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Your Profile</a>
@@ -119,6 +108,7 @@ else{
                           </p>
                         </a>
                       </li>
+                      <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="./logout.php">Logout</a></li>
                     </ul>
@@ -130,105 +120,33 @@ else{
         </div>
       </div>
     </nav>
-
     <div class="row ps-3 mb-5">
-      <div class="col-md-7">
-        <div class="row p-0 d-flex justify-content-center align-items-center">
-          <h3>Add Your Fund </h3>
+        <div class="col-md-6 d-flex flex-column justify-content-center">
+            <h3 class="mb-3" style="color: #45AAEE;">Your Name: <span class="ps-3" style='color: #02025A;'><?php echo $username; ?></span></h3>
+            <h3 class="mb-3" style="color: #45AAEE;">Your Email: <span class="ps-3" style='color: #02025A;'><?php echo $useremail; ?></span></h3>
+            <h3 class="mb-3" style="color: #45AAEE;">Your Balance: <span class="ps-3" style='color: #02025A;'>$<?php echo $balance; ?></span></h3>
         </div>
-        <div class="row">
-          <form class="p-2">
-            <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end mt-4">
-                <label class="dashFormLabel">Payment Method:</label>
-              </div>
-              <div class="col-md-5">
+        <div class="col-md-4 border rounded-4 shadow  p-3">
+          
+             
+                <h3 class="m-3 mb-5">Change Password</h3>
+                <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
                 
-                <select class="vodiapicker formInputField dashSelect" id="paymntMthd" name="paymntMthd" required>
-                      <?php 
-                          foreach($paymentMethods as $paymentMethod){
-                            echo '<option value="'.$paymentMethod["pm_id"].'" 
-                            data-thumbnail="'.$paymentMethod["pm_logo"].'">'.$paymentMethod["pm_name"].'</option>';
-                          }
-                      ?>
-                </select>
-
-                <button class="btn-select p-2 formInputField dashSelect" value=""></button>
-                <div class="b">
-                  <ul id="trayListUl"></ul>
-                </div>
-
-              </div>
-
-                    
-
-
-            </div>
-
-            <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel mb-lg-4">Amount in Dollars($):</label>
-              </div>
-              <div class="col-md-4">
-                <input type="number" class="form-control formInputField" id="fndamnt" name="fndamnt" min="1" step="0.01" required>
-                <div id="emailHelp" class="form-text ms-3">Minimum deposit $1</div>
-              </div>
-            </div>
-            <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel">Fee in Taka(BDT):</label>
-              </div>
-              <div class="col-md-3">
+                <form>
+                  <div class="mb-4">
+                    <input type="password" class="form-control mt-4 formInputField" id="currentPassword" name="currentPassword" placeholder="Your Current Password">
+                  </div>
+                  <div class="mb-4">
+                    <input type="password" class="form-control mt-4 formInputField" id="newPassword" name="newPassword" placeholder="Your New Password">
+                  </div>
+                  <div class="mb-4">
+                    <input type="password" class="form-control mt-4 formInputField" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
+                  </div>
+                  <button type="submit" class="btn text-light ms-5 ps-5 pe-5 signinupBtn">Submit</button>
+                </form>
                 
-                <div class="input-group mb-3">
-                  <input type="number" class="form-control formInputField" id="fndfee" name="fndfee" aria-describedby="basic-addon2" disabled>
-                  <span class="input-group-text" id="basic-addon2">BDT</span>
-                </div>
-              </div>
-
-            </div>
-            <div class="row ps-3 mb-3">
-              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                <label class="dashFormLabel">Total Amount to be paid(BDT):</label>
-              </div>
-              <div class="col-md-3">
-                <div class="input-group mb-3">
-                    <input type="number" class="form-control formInputField" id="fndamntBDT" name="fndamntBDT" aria-describedby="basic-addon3" disabled>
-                    <span class="input-group-text" id="basic-addon3">BDT</span>
-                </div>
-              </div>
-
-            </div>
-            <div class="row ps-3">
-              <div class="col-md-3"></div>
-              <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100 signinupBtn" id="addFndBtn"
-                  name="addFndBtn">Confirm</button>
-              </div>
-              <div class="col-md-2"></div>
-
-
-
-
-            </div>
-          </form>
+           
         </div>
-      </div>
-      <div class="col-md-5">
-        <div class="row">
-          <div class="col-md-5">
-            <button class="btn btn-primary w-100 signinupBtn">Payment Instruction</button>
-          </div>
-        </div>
-        <div class="row mt-4">
-          <div class="col-md-12 border border-3">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo doloribus corrupti alias nemo fuga iusto
-            impedit magni dolores, perferendis eaque reiciendis, distinctio quia. Nam veritatis unde, nesciunt ipsa nemo
-            at.
-          </div>
-        </div>
-
-      </div>
     </div>
 
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"
@@ -313,8 +231,7 @@ else{
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="./js/addFundSettings.js"></script>
-  <script src="./js/selectWithImage.js"></script>
+ 
 </body>
 
 </html>

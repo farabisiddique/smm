@@ -2,28 +2,38 @@
 
 $(document).ready(function() {
     var t = $('#allOrders').DataTable( {
-        "bAutoWidth": false,
-        "columnDefs": [ {
+      "bAutoWidth": false,
+      "columnDefs": [ {
+          "searchable": false,
+          "orderable": true,
+          "defaultContent": "-",
+          "targets": "_all" 
+      } ],
+      "language": {
+          "infoFiltered": ""
+      },
+      "responsive": true,
+      "order": [[ 1, 'asc' ]],
+      "paging": true,
+      "responsive": true,
+      "lengthChange": true,
+      "pageLength": 25,
+      "processing": true,
+      "serverSide": true,
+      "searching": false,
+      "ajax": {
+          "url": "./all_orders.php",
+          "type": "GET",
+          "data": function (data) {
+              console.log(data);
+          },
+          "error": function(err, status){
+             console.log(err);
+          },
+  
+      }
 
-            // "sWidth": "30%",
-            // "searchable": true,
-            // "orderable": true,
-            // "defaultContent": "-",
-            // "targets": "_all"
-
-        } ],
-        "language": {
-            "infoFiltered": ""
-        },
-
-        "order": [[ 1, 'asc' ]],
-        // "paging": true,
-        // "responsive": true,
-        // "lengthChange": true,
-        "pageLength": 25,
-        "processing": true,
-        "serverSide": true,
-        "ajax": "datatable/all_orders.php"
+      
     } );
 
     t.columns.adjust().draw();

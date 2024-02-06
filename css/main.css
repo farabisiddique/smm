@@ -188,7 +188,7 @@ th{
 .serviceVector {
   position: absolute;
   top: 33px;
-  left: -85px;
+  left: -21px;
 }
 
 
@@ -349,11 +349,24 @@ th{
    color: #02025A;
 }
 
-#serviceDetailsModal{
+#serviceDetailsModal, #orderModal, #frgtPassModal{
   z-index: 999;
+}
+
+.serviceRow td{
+  vertical-align: middle;
+  text-align: left;
 }
 
 .modal-backdrop{
   z-index: 101;
+}
+
+.signUpModal{
+  z-index: 102 !important;
+}
+
+.addOrderResponseModal{
+  z-index: 111 !important;
 }
 

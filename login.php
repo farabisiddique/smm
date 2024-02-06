@@ -7,14 +7,22 @@ function validateUser($email,$pass,$conn){
   $stmt->bind_param("ss", $email, $pass); // 'ss' specifies the variable types => 'string', 'string'
   $stmt->execute();
   $result = $stmt->get_result();
-
+  $userArray = array();
   // Check if the user exists
-  if ($result->num_rows == 1) {
-    return true;
+  if ($result->num_rows >0) {
+
+    while($userRow = $result->fetch_assoc() ){
+        array_push($userArray, $userRow);
+    }
+    $userid = $userArray[0]['user_id'];
+    $validationResult = true;
   }
   else{
-    return false;
+    $userid = null;
+    $validationResult = false;
   }
+
+  return array($userid,$validationResult);
 }
 
 
@@ -24,11 +32,11 @@ $password = $_POST['password']; // In real scenarios, you should hash and verify
 $rememberMe = $_POST['rememberMe'];
 
 // Assume a user validation function exists and returns a user_id if successful
-$user_id = validateUser($email, $password,$conn); // Implement this function based on your auth system
+$validation = validateUser($email, $password,$conn); // Implement this function based on your auth system
 
-if ($user_id) {
+if ($validation[1]) {
     session_start();
-    $_SESSION['user_id'] = $user_id;
+    $_SESSION['user_id'] = $validation[0];
 
     if ($rememberMe) {
         $token = bin2hex(random_bytes(64)); // Generate a secure token
@@ -36,7 +44,7 @@ if ($user_id) {
 
         // Insert token into the database
         $insertToken = $conn->prepare("INSERT INTO user_tokens (user_id, token, expires_at) VALUES (?, ?, ?)");
-        $insertToken->bind_param("iss", $user_id, $token, $expires_at);
+        $insertToken->bind_param("iss", $validation[0], $token, $expires_at);
         $insertToken->execute();
 
         // Set a cookie with the token

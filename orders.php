@@ -16,7 +16,6 @@ if (isset($_COOKIE['rememberMe'])) {
         $_SESSION['user_id'] = $userid;
   
         $userQuery = $conn->prepare("SELECT * FROM user 
-                                    JOIN balance ON user.user_id = balance.usersid 
                                     WHERE user_id = ? ");
         $userQuery->bind_param("i", $userid);
         $userQuery->execute();
@@ -25,7 +24,7 @@ if (isset($_COOKIE['rememberMe'])) {
         if ($userResult->num_rows == 1) {
             $userHere = $userResult->fetch_assoc();
             $username = $userHere['user_name'];
-            $balance = $userHere['balance_available'];
+            $balance = $userHere['user_balance'];
   
         }
 
@@ -80,14 +79,17 @@ else{
           </div>
           <div class="offcanvas-body d-lg-flex justify-content-lg-end">
             <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item me-4 mb-2">
+              <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu"
                   href="./dashboard.php">Dashboard</a>
               </li>
-              <li class="nav-item me-4 mb-2">
+              <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./orders.php">Orders</a>
               </li>
-              <li class="nav-item me-5 mb-2">
+              <li class="nav-item me-3 mb-2">
+                <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./services.php">Services</a>
+              </li>
+              <li class="nav-item me-3 mb-2">
                 <a class="btn text-light text-decoration-none me-4 navmenu dashmenu" href="./addfund.php">Add Fund</a>
               </li>
               <li class="nav-item mb-2">
@@ -95,7 +97,7 @@ else{
                     <a class="btn text-light text-decoration-none dropdown-toggle navmenu dashmenu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Your Profile</a>
                     <ul class="dropdown-menu">
                       <li>
-                        <a class="dropdown-item" href="./logout.php">
+                        <a class="dropdown-item" href="./profile.php">
                           <p class="dropdown-item mb-1 ellipsis p-0">
                             <?php echo $username; ?>
                           </p>
@@ -124,12 +126,12 @@ else{
               <tr>
                   <th>No</th>
                   <th>Order ID</th>
-                  <!-- <th>Date</th>
+                  <th>Date</th>
                   <th>Link</th>
                   <th>Service</th>
                   <th>Quantity</th>
                   <th>Charge</th>
-                  <th>Status</th> -->
+                  <th>Status</th>
                  
 
 
@@ -139,12 +141,13 @@ else{
               <tr>
                   <td></td>
                   <td></td>
-                  <!-- <td></td>
                   <td></td>
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td></td> -->
+                  <td></td>
+                  <td></td>
+                  
 
               </tr>
 

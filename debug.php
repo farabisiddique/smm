@@ -1,5 +1,6 @@
 <?php
 include './functions.php';
+include './db.php';
 
 function beautifulVarDump($var, $indent = 0) {
     $indentation = str_repeat('&nbsp;', $indent * 4);
@@ -59,17 +60,47 @@ function arrayToHtmlTable($data) {
     return $html;
 }
 
-// Example usage with your data structure
-$data = [/* Your array of objects here */];
+function get_services_by_ids($ids,$newProperties) {
+    $api = new Api();
+    $api_services = $api->services(); 
+    $matched_services = []; 
+
+    foreach($api_services as $service) {
+        $service_id = $service->service;
+        if(($key = array_search($service_id, $ids)) !== false) {
+            foreach($newProperties as $properties) {
+                if($properties['service_api_id'] == $service_id) {
+                    foreach($properties as $property => $value) {
+                        $service->$property = $value; 
+                    }
+                    break; 
+                }
+            }
+            $matched_services[] = $service; 
+        }
+    }
+    return $matched_services; 
+}
 
 
 
+$servicesResult = $conn->query("SELECT * FROM services 
+                            JOIN service_category ON services.service_cat_id = service_category.service_category_id 
+                            JOIN service_subcategory ON services.service_subcat_id = service_subcategory.service_subcategory_id");
 
 
+$allServices = array();
+$allServiceIds = array();
+if ($servicesResult->num_rows >0) {
+    while( $servicesRow = $servicesResult->fetch_assoc() ){
+        array_push($allServices, $servicesRow);
+        array_push($allServiceIds, $servicesRow['service_api_id']);
+    }
+}
 
-$api = new Api();
+  // beautifulVarDump($allServices)
 
-$services = $api->services(); # Return all services
+beautifulVarDump(get_services_by_ids($allServiceIds,$allServices));
 
-echo arrayToHtmlTable($services);
+
 ?>

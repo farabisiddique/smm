@@ -89,34 +89,67 @@ if (isset($_COOKIE['rememberMe'])) {
           <form>
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
-              <input type="text" class="form-control formInputField" id="name" placeholder="Enter your name">
+              <input type="text" class="form-control formInputField" id="name" name="name" placeholder="Enter your name" required>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email Address</label>
-              <input type="email" class="form-control formInputField" id="email" placeholder="Enter your email">
+              <input type="email" class="form-control formInputField" id="email" name="email" placeholder="Enter your email" required> 
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
               <div class="input-group">
-                <input type="password" class="form-control formInputField passShowClass" id="password"
-                  placeholder="Enter your password">
+                <input type="password" class="form-control formInputField passShowClass" id="password" name="password"
+                  placeholder="Enter your password" required>
                 <span class="input-group-text pe-auto eyeBtn" id="basic-addon2" role="button">
                   <i class="bi bi-eye"></i>
                 </span>
               </div>
+              <div class="form-text text-danger mt-2 ps-2 fw-bold loginHelpText" id="basic-addon4"></div>
             </div>
 
-
-            <!-- <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1" checked>
-                            <label class="form-check-label" for="exampleCheck1">Keep me logged in</label>
-                        </div> -->
-            <button type="submit" class="btn btn-primary w-100 text-center mb-3 signinupBtn">Sign Up</button>
+            <button type="submit" class="btn btn-primary w-100 text-center mb-3 signinupBtn" id="signUpBtn" name="signUpBtn">Sign Up</button>
           </form>
         </div>
 
       </div>
     </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade signUpModal" id="successModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Signup Successful</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Your account has been successfully created. Login Now
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal fade signUpModal" id="errorModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Signup Failed</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            There was a problem creating your account. Please try again.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"
@@ -133,6 +166,7 @@ if (isset($_COOKIE['rememberMe'])) {
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="./js/showHidePass.js"></script>
+  <script src="./js/signupAjax.js"></script>
 </body>
 
 </html>
