@@ -117,27 +117,39 @@ $(document).ready(function() {
         var serviceId = $("#serviceType").val();
         var pageLnk = $("#pageLnk").val();
         var followQty = $("#followQty").val();
+        var serviceApiId = $("#serviceType option:selected").data("serviceapiid");
+
+        // Show the loader
+        $(".loading-overlay").show();
         
       $.ajax({
           type: "POST",
           url: "./addOrder.php", 
           data: {
               serviceId: serviceId,
+              serviceApiId: serviceApiId,
               pageLnk: pageLnk,
               followQty: followQty
           },
           success: function(response) {
+
+            $(".loading-overlay").hide();
+            
             console.log(response);
             if(response==1){
-              
+                $(".addOrderResponseLabel").html("Submitted Order!");
+                $(".addOrderResponseTxt").html("Your order has been submitted. You can check your order in Orders page.");
+                new bootstrap.Modal(document.getElementById('addOrderResponseModal')).show();
             }
             else if(response==2){
-              
-            }
-            else if(response==3){
                 
                 $(".addOrderResponseLabel").html("Insufficient Balance!");
                 $(".addOrderResponseTxt").html("Sorry! Your account balance is insufficient to complete this order. Please add funds to your account.");
+                new bootstrap.Modal(document.getElementById('addOrderResponseModal')).show();
+            }
+            else{
+                $(".addOrderResponseLabel").html("Error!");
+                $(".addOrderResponseTxt").html("Sorry! Your can't be processed at this time. Please try again later.");
                 new bootstrap.Modal(document.getElementById('addOrderResponseModal')).show();
             }
           }
@@ -146,6 +158,9 @@ $(document).ready(function() {
       
     });
 
+    $(".closeOrderResponseModal").click(function(){ 
+        location.reload();
+    });
 
 
 

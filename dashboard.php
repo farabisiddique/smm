@@ -296,6 +296,7 @@ else{
                       echo '<option 
                               class="serviceNameOption"
                               value="'.$aService->service_id.'"
+                              data-serviceapiid="'.$aService->service_api_id.'"
                               data-servicecatid="'.$aService->service_cat_id.'"
                               data-serivicesubcatid="'.$aService->service_subcat_id.'"
                               data-servicecharge="' . $service_charge . '"
@@ -314,7 +315,7 @@ else{
             <label class="dashFormLabel">Link:</label>
           </div>
           <div class="col-md-6">
-            <input type="text" class="form-control formInputField" id="pageLnk" name="pageLnk" placeholder="Link" required>
+            <input type="url" class="form-control formInputField" id="pageLnk" name="pageLnk" placeholder="Link" required>
           </div>
         </div>
         <div class="row ps-3 mb-3">
@@ -354,17 +355,24 @@ else{
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title addOrderResponseLabel" id="addOrderResponseLabel"></h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close closeOrderResponseModal" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body addOrderResponseTxt">
             
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary closeOrderResponseModal" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-overlay" style="display:none;">
+      <div class="loader"></div>
+    </div>
+
+
 
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"
       class="maintContSvgCurve">

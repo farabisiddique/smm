@@ -132,16 +132,23 @@ else{
                 <h3 class="m-3 mb-5">Change Password</h3>
                 <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
                 
-                <form>
-                  <div class="mb-4">
-                    <input type="password" class="form-control mt-4 formInputField" id="currentPassword" name="currentPassword" placeholder="Your Current Password">
+                <form id="chngPassForm">
+                  
+                  <div class="input-group ">
+                    <input type="password" class="form-control mb-2 formInputField" id="currentPassword" name="currentPassword" placeholder="Your Current Password" required>
                   </div>
-                  <div class="mb-4">
-                    <input type="password" class="form-control mt-4 formInputField" id="newPassword" name="newPassword" placeholder="Your New Password">
+                  <p class="form-text mt-1 mb-1 ms-3" id="currentPasswordHelp"></p>
+                  
+                  <div class="input-group ">
+                    <input type="password" class="form-control mb-2 formInputField" id="newPassword" name="newPassword" placeholder="Your New Password" required>
                   </div>
-                  <div class="mb-4">
-                    <input type="password" class="form-control mt-4 formInputField" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
+                  <p class="form-text mt-1 mb-1 ms-3" id="newPasswordHelp"></p>
+                  
+                  <div class="input-group ">
+                    <input type="password" class="form-control mb-2 formInputField" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
                   </div>
+                  <p class="form-text mt-1 mb-1 ms-3" id="confirmPasswordHelp"></p>
+                  
                   <button type="submit" class="btn text-light ms-5 ps-5 pe-5 signinupBtn">Submit</button>
                 </form>
                 
@@ -226,11 +233,29 @@ else{
     </svg>
   </div>
 
+  <div class="modal fade changePassResponseModal" id="changePassResponseModal" tabindex="-1" aria-labelledby="changePassResponseLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title changePassResponseLabel" id="changePassResponseLabel"></h5>
+          <button type="button" class="btn-close closeChngPassResponseModal" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body changePassResponseTxt">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary closeChngPassResponseModal" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Include Bootstrap JS and its dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./js/profile.js"></script>
  
 </body>
 
