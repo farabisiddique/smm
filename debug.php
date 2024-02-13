@@ -63,7 +63,10 @@ function arrayToHtmlTable($data) {
 $api = new Api();
 $order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 100, 'runs' => 2, 'interval' => 5]);;
 
-beautifulVarDump($order);
+// beautifulVarDump($order);
+$number = 0.6;
+$formattedNumber = number_format($number, 2);
+echo $formattedNumber; // Outputs 0.60
 
 
 ?>

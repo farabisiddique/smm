@@ -147,6 +147,8 @@ if($balance >= $totalCharge){
 
   // Update Balance
   $newBalance = $balance - $totalCharge;
+  $newBalance = round(floor($newBalance * 100) / 100, 2);
+  
   $balanceUpdated = updateBalance($userid,$newBalance,$conn);
   
   if($orderAddedtoTable && $balanceUpdated){

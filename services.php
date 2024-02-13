@@ -3,6 +3,23 @@
 include './db.php'; 
 include './functions.php';
 
+function beautifulVarDump($var, $indent = 0) {
+    $indentation = str_repeat('&nbsp;', $indent * 4);
+    $type = gettype($var);
+
+    echo $indentation . '<span style="color: blue;">' . $type . '</span>';
+
+    if ($type == 'array' || $type == 'object') {
+        echo ' (<span style="color: green;">' . count((array)$var) . '</span>)<br>';
+        foreach ((array)$var as $key => $value) {
+            echo $indentation . '&nbsp;&nbsp;&nbsp;&nbsp;<strong>' . $key . '</strong>: ';
+            beautifulVarDump($value, $indent + 1);
+        }
+    } else {
+        echo ' <span style="color: red;">' . htmlspecialchars(print_r($var, true)) . '</span><br>';
+    }
+}
+
 function get_services_by_ids($ids,$newProperties) {
     $api = new Api();
     $api_services = $api->services(); 
@@ -67,6 +84,8 @@ if (isset($_COOKIE['rememberMe'])) {
         }
 
       $finalServices = get_services_by_ids($allServiceIds,$allServices);
+      
+      
       
 
     } 
@@ -251,7 +270,7 @@ else{
               <th scope="col">Service</th>
               <th scope="col">Rate per 1000</th>
               <th scope="col">Min/Max</th>
-              <th scope="col">Description</th>
+              <!-- <th scope="col">Description</th> -->
               <th scope="col">Order</th>
             </tr>
           </thead>
@@ -262,30 +281,35 @@ else{
                     $service_min = $aService->min;
                     $service_max = $aService->max;
                     $service_charge = $aService->rate + (($aService->rate*$aService->service_rate_percentage)/100);
+                    $service_charge = number_format($service_charge, 2);
+
+                    
                   
                     echo '<tr class="serviceRow" data-servicecatid='.$service_cat_id.'>';
                       echo "<td>".$aService->service_id."</td>";
                       echo "<td>".$aService->service_name."</td>";
                       echo "<td>$".$service_charge."</td>";
                       echo "<td>".$service_min."-".$service_max."</td>";
-                      echo  '<td>
-                              <button type="button" 
-                                      class="btn btn-primary seeServiceDetails" 
-                                      data-bs-toggle="modal" 
-                                      data-bs-target="#serviceDetailsModal"
-                                      data-servicename="'.$aService->service_name.'"
-                                      data-servicecharge="' . $service_charge . '"
-                                      data-servicemin="' . $service_min . '"
-                                      data-servicemax="' . $service_max . '"
-                              >
-                                See Details
-                              </button>
-                            </td>';
+                      // echo  '<td>
+                      //         <button type="button" 
+                      //                 class="btn btn-primary seeServiceDetails" 
+                      //                 data-bs-toggle="modal" 
+                      //                 data-bs-target="#serviceDetailsModal"
+                      //                 data-servicename="'.$aService->service_name.'"
+                      //                 data-servicecharge="' . $service_charge . '"
+                      //                 data-servicemin="' . $service_min . '"
+                      //                 data-servicemax="' . $service_max . '"
+                      //         >
+                      //           See Details
+                      //         </button>
+                      //       </td>';
                       echo  '<td>
                                   <button type="button" 
                                           class="btn btn-primary placeOrder" 
                                           data-bs-toggle="modal" 
                                           data-bs-target="#orderModal"
+                                          data-serviceid="'.$aService->service_id.'"
+                                          data-servicetype="'.$aService->service_api_id.'"
                                           data-servicename="'.$aService->service_name.'"
                                           data-servicecharge="' . $service_charge . '"
                                           data-servicemin="' . $service_min . '"
@@ -323,15 +347,55 @@ else{
       </div>
     </div>
 
-    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade orderModal" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5 orderModalLabel" id="orderModalLabel"></h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ...
+            <form class="p-2" id="addOrder">
+              <div class="row ps-3 mb-3">
+                <div class="col-md-1 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                  <label class="dashFormLabel">Link:</label>
+                </div>
+                <div class="col-md-9">
+                  <input type="url" class="form-control formInputField" id="pageLnk" name="pageLnk" placeholder="Link" required>
+                </div>
+              </div>
+              <div class="row ps-3 mb-3">
+                <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                  <label class="dashFormLabel">Quantity:
+                    <span id="minQty" class="form-text"></span>
+                    <span id="maxQty" class="form-text"></span>
+                  </label>
+                </div>
+                <div class="col-md-4">
+                  <input type="number" class="form-control formInputField followQtyClass" id="followQty" name="followQty" required>
+
+                </div>
+
+                <div class="col-md-2 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                  <label class="dashFormLabel">Total Amount:</label>
+                </div>
+                <div class="col-md-3">
+                  <input type="number" class="form-control formInputField" id="totalAmnt" name="totalAmnt" disabled>
+                </div>
+              </div>
+              <div class="row ps-3">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                  <input type="hidden" class="serviceType">
+                  <input type="hidden" class="serviceId">
+                  <button type="submit" class="btn btn-primary w-100 signinupBtn" id="submtOrdr" name="submtOrdr">Submit
+                    Order</button>
+                </div>
+                <div class="col-md-2"></div>
+
+              </div>
+
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -339,7 +403,28 @@ else{
         </div>
       </div>
     </div>
+
+    <div class="modal fade addOrderResponseModal" id="addOrderResponseModal" tabindex="-1" aria-labelledby="addOrderResponseLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title addOrderResponseLabel" id="addOrderResponseLabel"></h5>
+            <button type="button" class="btn-close closeOrderResponseModal" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body addOrderResponseTxt">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary closeOrderResponseModal" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     
+    <!-- Loading Spinner -->
+    <div class="loading-overlay" style="display:none;">
+      <div class="loader"></div>
+    </div>
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"
       class="maintContSvgCurve">
       <path opacity="0.19" fill-rule="evenodd" clip-rule="evenodd"

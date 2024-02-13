@@ -79,7 +79,7 @@ $(document).ready(function() {
           amount = qty * (charge/1000);
           
 
-          amount = Math.round(amount * 100) / 100;
+          // amount = Math.round(amount * 100) / 100;
 
           
 
@@ -102,11 +102,6 @@ $(document).ready(function() {
         }
         
         amount = qty * (charge/1000);
-        
-
-        
-
-        amount = Math.round(amount * 100) / 100;
 
         $("#totalAmnt").val(amount);
       
@@ -149,7 +144,7 @@ $(document).ready(function() {
             }
             else{
                 $(".addOrderResponseLabel").html("Error!");
-                $(".addOrderResponseTxt").html("Sorry! Your can't be processed at this time. Please try again later.");
+                $(".addOrderResponseTxt").html("Sorry! Your order can't be processed at this time. Please try again later.");
                 new bootstrap.Modal(document.getElementById('addOrderResponseModal')).show();
             }
           }
@@ -159,7 +154,8 @@ $(document).ready(function() {
     });
 
     $(".closeOrderResponseModal").click(function(){ 
-        location.reload();
+     
+        window.location.href = "./orders.php";
     });
 
 
