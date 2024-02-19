@@ -114,12 +114,42 @@ if (isset($_COOKIE['rememberMe'])) {
             <button type="submit" class="btn btn-primary w-100 text-center mb-3 signinupBtn" id="signInBtn"
               name="signInBtn">Sign In</button>
             <a href="#" class="text-decoration-none" style="color: #070E65; font-size: 20px;" id="frgtPass"
-              name="frgtPass">
+              name="frgtPass" data-bs-toggle="modal" data-bs-target="#forgetPassModal">
               <p>Forgot your password?</p>
             </a>
           </form>
         </div>
         
+      </div>
+    </div>
+
+   
+
+    <!-- Modal -->
+    <div class="modal fade" id="forgetPassModal" tabindex="-1" aria-labelledby="forgetPassModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="forgetPassModalLabel">Forgot Password?</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control formInputField" id="passresetEmail" name="passresetEmail"
+                  placeholder="Enter your email">
+              </div>
+              
+              
+              
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary w-100 text-center mb-3 signinupBtn" id="passresetBtn"
+            name="passresetBtn">Send Password Reset Link</button>
+          </div>
+        </div>
       </div>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"

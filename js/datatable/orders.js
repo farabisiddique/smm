@@ -38,6 +38,16 @@ $(document).ready(function() {
 
     t.columns.adjust().draw();
 
+    $(".orderStatusCheck").click(function(){
+        console.log("clicked");
+        $(".loading-overlay").show();
+        var orderId = $(this).data("orderid");
+        console.log(orderId);
+        $(".loading-overlay").hide();
+
+
+    });
+
 
 
 

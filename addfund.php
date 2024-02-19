@@ -315,6 +315,7 @@ else{
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="./js/addFundSettings.js"></script>
   <script src="./js/selectWithImage.js"></script>
+  <script src="./js/all.js"></script>
 </body>
 
 </html>

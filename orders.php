@@ -126,7 +126,7 @@ else{
               <tr>
                   <th>No</th>
                   <th>Order ID</th>
-                  <th>Date</th>
+                  <th>Date & Time</th>
                   <th>Link</th>
                   <th>Service</th>
                   <th>Quantity</th>
@@ -153,6 +153,11 @@ else{
 
           </tbody>
       </table>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-overlay" style="display:none;">
+      <div class="loader"></div>
     </div>
 
     <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="647" viewBox="0 0 1440 647" fill="none"
@@ -239,6 +244,7 @@ else{
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
   <script type="text/javascript" charset="utf8" src="./js/datatable/orders.js"></script>
+  <script type="text/javascript" charset="utf8" src="./js/orderStatusCheck.js"></script>
 </body>
 
 </html>

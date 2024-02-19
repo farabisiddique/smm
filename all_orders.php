@@ -8,8 +8,7 @@ $order_user_id = $_SESSION['user_id'];
 $table ='orders';
 
 $joinQuery = [
-    "JOIN services ON orders.order_service_id = services.service_id",
-    "JOIN order_status ON orders.order_status_id = order_status.status_id"
+    "JOIN services ON orders.order_service_id = services.service_id"
 ];
 
 
@@ -28,7 +27,14 @@ $columns = array(
     array( 'db' => 'order_created_at',     
        'dt' => 2,
        'formatter' => function( $d, $row ) {
-          return date('d/m/Y', strtotime($d));
+
+          $date = new DateTime($d, new DateTimeZone('UTC')); // Assuming UTC as the original timezone
+
+          $date->setTimezone(new DateTimeZone('Asia/Dhaka')); // GMT+6, for example, Dhaka
+
+          $formattedDate = $date->format('d/m/Y h:i a'); // 19/02/2024 05:30 am
+         
+          return $formattedDate;
 
       } 
     ),
@@ -43,7 +49,15 @@ $columns = array(
     array( 'db' => 'service_name', 'dt' => 4 ),
     array( 'db' => 'order_qty', 'dt' => 5 ),
     array( 'db' => 'order_charge', 'dt' => 6 ),
-    array( 'db' => 'status_name', 'dt' => 7 )
+    array(
+        'db' => 'order_id',     
+        'dt' => 7,
+        'formatter' => function( $d, $row ) {
+            // Return a Bootstrap button. Modify classes as needed for your version of Bootstrap.
+            return "<button class='btn btn-primary orderStatusCheck' data-orderid='".$d."' onclick='orderStatus(this)'>Check Status</button>";
+        } 
+    ),
+
     
 );
 

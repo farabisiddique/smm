@@ -136,10 +136,18 @@ class SSP {
         $columnIdx = array_search( $requestColumn['data'], $dtColumns );
         $column = $columns[ $columnIdx ];
 
+        // if ( $requestColumn['orderable'] == 'true' ) {
+        //   $dir = $request['order'][$i]['dir'] === 'asc' ?
+        //     'ASC' :
+        //     'DESC';
+
+        //   $orderBy[] = '`'.$column['db'].'` '.$dir;
+        // }
+
         if ( $requestColumn['orderable'] == 'true' ) {
           $dir = $request['order'][$i]['dir'] === 'asc' ?
-            'ASC' :
-            'DESC';
+            'DESC' :
+            'ASC';
 
           $orderBy[] = '`'.$column['db'].'` '.$dir;
         }

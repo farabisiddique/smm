@@ -85,10 +85,23 @@ th{
   font-style: normal;
   font-weight: 500;
   line-height: 120%;
-  /* 48px */
   font-family: Ranmor;
   font-size: 23px;
 
+}
+
+.activenav{
+  border-radius: 8px;
+  background: linear-gradient(254deg, #325AAB 28.16%, #45AAEE 93.75%);
+  display: flex;
+  width: 140px;
+  height: 40px;
+  padding: 10px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 15px;
 }
 
 .signinImgContainer {
@@ -364,6 +377,10 @@ th{
 
 .signUpModal{
   z-index: 102 !important;
+}
+
+#forgetPassModal{
+  z-index: 111;
 }
 
 .addOrderResponseModal{

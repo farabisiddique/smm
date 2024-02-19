@@ -2,7 +2,7 @@
 include './env.php';
 $servername = HOSTNAME;
 $dbusername = DB_USER;
-$dbpassword = DB_PASS;
+$dbpassword = DB_PASS; 
 $dbname = DB_NAME;
 global $conn;
 // Create connection

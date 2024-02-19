@@ -60,13 +60,51 @@ function arrayToHtmlTable($data) {
     return $html;
 }
 
-$api = new Api();
-$order = $api->order(['service' => 1, 'link' => 'http://example.com/test', 'quantity' => 100, 'runs' => 2, 'interval' => 5]);;
+function addOrderThruApi($apiId,$lnk,$qty){
 
-// beautifulVarDump($order);
-$number = 0.6;
-$formattedNumber = number_format($number, 2);
-echo $formattedNumber; // Outputs 0.60
+    $api = new Api();
+    $apiResponse = $api->order([
+                       'service' => $apiId, 
+                       'link' => $lnk, 
+                       'quantity' => $qty
+                       ]);
+
+    // $apiResponse ='{"order": 23501}';  
+  // Example response from api After calling the order() function from the api functions
+
+    $orderId = $apiResponse->order;
+
+    return $orderId;
+}
+
+function checkStatusFromApi($orderId){
+  $api = new Api(); 
+
+  $orderStatusResponseFromApi = $api->status($orderId);
+
+  $orderStatus = $orderStatusResponseFromApi->status;
+
+  return $orderStatus;
+
+}
+
+
+
+$serviceApiId = 1730;
+$pageLnk = 'https://www.facebook.com/mayaclothingbd?mibextid=ZbWKwL';
+$followQty = 100;
+
+
+
+$orderApiId = addOrderThruApi($serviceApiId,$pageLnk,$followQty);
+
+// $orderApiId = 1529397;
+// $orderCurrentStatus = checkStatusFromApi($orderApiId);
+
+
+
+var_dump($orderApiId);
+
 
 
 ?>

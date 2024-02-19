@@ -34,22 +34,29 @@ function get_our_single_service_by_id($id,$conn){
 }
 
 function addOrderThruApi($apiId,$lnk,$qty){
-    $apiResponse ='{"order": 23501}';  // Example response from api
-      
-    $responseObj = json_decode($apiResponse);
-    $orderId = $responseObj->order;
-    
+
+    $api = new Api();
+    $apiResponse = $api->order([
+                       'service' => $apiId, 
+                       'link' => $lnk, 
+                       'quantity' => $qty
+                       ]);
+
+    // $apiResponse ='{"order": 23501}';  
+  // Example response from api After calling the order() function from the api functions
+
+    $orderId = $apiResponse->order;
+
     return $orderId;
 }
-
 function addOrderToTable($user, $oApiId, $oLink, $oServiceId, $oQty, $oCharge, $oStatus, $conn) {
     // Prepare an insert statement
-    $sql = "INSERT INTO orders (order_user_id, order_api_id, order_link, order_service_id, order_qty, order_charge, order_status_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO orders (order_user_id, order_api_id, order_link, order_service_id, order_qty, order_charge, order_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     // Prepare the SQL statement
     if ($stmt = $conn->prepare($sql)) {
         // Bind variables to the prepared statement as parameters
-        $stmt->bind_param("iisisdi", $user, $oApiId, $oLink, $oServiceId, $oQty, $oCharge, $oStatus);
+        $stmt->bind_param("iisisds", $user, $oApiId, $oLink, $oServiceId, $oQty, $oCharge, $oStatus);
 
         // Attempt to execute the prepared statement
         if ($stmt->execute()) {
@@ -96,9 +103,6 @@ function updateBalance($userId, $newBalance, $conn) {
 
 
 
-
-
-
 session_start();
 $userid = $_SESSION['user_id']; 
 
@@ -141,7 +145,7 @@ if($balance >= $totalCharge){
   // Order through Api
   $orderApiId = addOrderThruApi($serviceApiId,$pageLnk,$followQty);
 
-  $orderDefaultStatus = 1;
+  $orderDefaultStatus = "Pending";
   // Save data to order table
   $orderAddedtoTable = addOrderToTable($userid,$orderApiId,$pageLnk,$ourServiceId,$followQty,$totalCharge,$orderDefaultStatus,$conn);
 

@@ -120,6 +120,5 @@ $("#addOrder").submit(function(e){
 });
 
 $(".closeOrderResponseModal").click(function(){ 
-
     window.location.href = "./orders.php";
 });

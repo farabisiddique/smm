@@ -1,11 +1,14 @@
 <?php
+
+include './envAPI.php';
+
 class Api
 {
     /** API URL */
-    public $api_url = 'https://growfollows.com/api/v2';
+    public $api_url = API_URL;
 
     /** Your API key */
-    public $api_key = 'e71368aabed9fcc31080940a61cdaf36';
+    public $api_key = API_KEY;
 
     /** Add order */
     public function order($data)

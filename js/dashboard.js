@@ -77,11 +77,7 @@ $(document).ready(function() {
           }
           
           amount = qty * (charge/1000);
-          
-
           // amount = Math.round(amount * 100) / 100;
-
-          
 
           $("#totalAmnt").val(amount);
       
@@ -130,7 +126,7 @@ $(document).ready(function() {
 
             $(".loading-overlay").hide();
             
-            console.log(response);
+           
             if(response==1){
                 $(".addOrderResponseLabel").html("Submitted Order!");
                 $(".addOrderResponseTxt").html("Your order has been submitted. You can check your order in Orders page.");
@@ -154,7 +150,6 @@ $(document).ready(function() {
     });
 
     $(".closeOrderResponseModal").click(function(){ 
-     
         window.location.href = "./orders.php";
     });
 
