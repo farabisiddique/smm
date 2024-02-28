@@ -1,3 +1,86 @@
+<?php 
+
+include '../db.php';
+include '../functions.php';
+
+function getAPIbalance(){
+    $api = new Api();
+    $balance = $api->balance()->balance;
+    $formattedBalance = floor($balance * 100) / 100;
+    return $formattedBalance;
+}
+
+function getSiteSettings($conn){
+  
+    $sql = "SELECT * FROM site_settings WHERE setting_id = 1";
+
+    // Execute the query
+    $result = $conn->query($sql);
+    $resultArray = array();
+
+    // Check if there are results
+    if ($result->num_rows > 0) {
+        // output data of each row
+        while($row = $result->fetch_assoc()) {
+            array_push($resultArray, $row);
+        }
+    } 
+    return $resultArray;
+}
+
+function getNoOfUsers(){
+  
+}
+
+
+if (isset($_COOKIE['adminCookie'])) {
+    $token = $_COOKIE['adminCookie'];
+
+    $findToken = $conn->prepare("SELECT admin_id FROM admin_tokens WHERE token = ? AND expires_at > NOW()");
+    $findToken->bind_param("s", $token);
+    $findToken->execute();
+    $result = $findToken->get_result();
+
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        $userid = $user['admin_id'];
+
+        // Log the user in by setting session variables, etc.
+        session_start();
+        $_SESSION['admin_id'] = $userid;
+
+        $userQuery = $conn->prepare("SELECT * FROM admin 
+                                    WHERE admin_id = ? ");
+
+        $userQuery->bind_param("i", $userid);
+        $userQuery->execute();
+        $userResult = $userQuery->get_result();
+
+
+        if ($userResult->num_rows == 1) {
+            $userHere = $userResult->fetch_assoc();
+            $user_full_name = $userHere['user_full_name'];
+            
+        }
+
+        $siteSettings = getSiteSettings($conn);
+        $dollarRateToday = ceil($siteSettings[0]['dollar_rate']);
+
+        
+         
+
+    } 
+    else {
+          // Token not valid or expired
+          setcookie("adminCookie", "", time() - 3600, "/"); // Delete the cookie
+          session_destroy();
+          header("Location: ./index.php"); // Redirect to the login page
+    }
+}
+else{
+  header("Location: ./index.php"); // Redirect to the login page
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,23 +91,25 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="./plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <link rel="stylesheet" href="./plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
   <!-- iCheck -->
-  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <link rel="stylesheet" href="./plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- JQVMap -->
-  <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
+  <link rel="stylesheet" href="./plugins/jqvmap/jqvmap.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="./dist/css/adminlte.min.css">
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <link rel="stylesheet" href="./plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
-  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="./plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
-  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+  <link rel="stylesheet" href="./plugins/summernote/summernote-bs4.min.css">
+
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -106,7 +191,7 @@
         </a>
         <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
           
-          <a href="#" class="dropdown-item">
+          <a href="./logout.php" class="dropdown-item">
              Logout
           </a>
           
@@ -121,7 +206,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="./index.php" class="brand-link">
-      <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <img src="./dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">MetaBD Admin</span>
     </a>
 
@@ -130,10 +215,10 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="./dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Fahim Siddiqui</a>
+          <a href="#" class="d-block"><?php echo $user_full_name;  ?></a>
         </div>
       </div>
 
@@ -202,7 +287,7 @@
         <div class="row">
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-info">
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3>150</h3>
 
@@ -217,7 +302,7 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-success">
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3>53</h3>
 
@@ -232,7 +317,7 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-warning">
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3>44</h3>
 
@@ -247,9 +332,9 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-success <?php echo (getAPIbalance()<=20) ? 'bounce balanceAlert' : ''; ?>"> 
               <div class="inner">
-                <h3>$<span class="gfBalance">65</span></h3>
+                <h3>$<span class="gfBalance"><?php echo getAPIbalance(); ?></span></h3>
 
                 <p>Balance in GF</p>
               </div>
@@ -262,7 +347,7 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3>&#2547;<span class="amountEarned">65</span></h3>
 
@@ -277,7 +362,7 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3>&#2547;<span class="amountEarned">65</span></h3>
 
@@ -292,7 +377,7 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3>&#2547;<span class="amountEarned">65</span></h3>
 
@@ -307,7 +392,7 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3>&#2547;<span class="amountEarned">65</span></h3>
 
@@ -322,10 +407,9 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-warning">
               <div class="inner">
-                <h3>&#2547;<span class="amountEarned">65</span></h3>
-
+                <h3>&#2547;<span class="dollarRate"><?php echo $dollarRateToday; ?></span></h3>
                 <p>Dollar Rate Today</p>
               </div>
               <div class="icon">
@@ -364,30 +448,30 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
+<script src="./plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="./plugins/jquery-ui/jquery-ui.min.js"></script>
 
 <!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- JQVMap -->
-<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<script src="./plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="./plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
 <!-- jQuery Knob Chart -->
-<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
+<script src="./plugins/jquery-knob/jquery.knob.min.js"></script>
 <!-- daterangepicker -->
-<script src="plugins/moment/moment.min.js"></script>
-<script src="plugins/daterangepicker/daterangepicker.js"></script>
+<script src="./plugins/moment/moment.min.js"></script>
+<script src="./plugins/daterangepicker/daterangepicker.js"></script>
 <!-- Tempusdominus Bootstrap 4 -->
-<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="./plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
 <!-- overlayScrollbars -->
-<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<script src="./plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
-<script src="dist/js/adminlte.js"></script>
+<script src="./dist/js/adminlte.js"></script>
 
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard.js"></script>
+<script src="./dist/js/pages/dashboard.js"></script>
 </body>
 </html>
