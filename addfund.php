@@ -137,7 +137,7 @@ else{
           <h3>Add Your Fund </h3>
         </div>
         <div class="row">
-          <form class="p-2">
+          <form class="p-2" id="addFundForm" method="POST">
             <div class="row ps-3 mb-3">
               <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end mt-4">
                 <label class="dashFormLabel">Payment Method:</label>
@@ -148,7 +148,7 @@ else{
                       <?php 
                           foreach($paymentMethods as $paymentMethod){
                             echo '<option value="'.$paymentMethod["pm_id"].'" 
-                            data-thumbnail="'.$paymentMethod["pm_logo"].'">'.$paymentMethod["pm_name"].'</option>';
+                            data-thumbnail="'.$paymentMethod["pm_logo"].'">'.$paymentMethod["pm_name"].'- 0'.$paymentMethod["pm_no"].'</option>';
                           }
                       ?>
                 </select>
@@ -157,12 +157,7 @@ else{
                 <div class="b">
                   <ul id="trayListUl"></ul>
                 </div>
-
               </div>
-
-                    
-
-
             </div>
 
             <div class="row ps-3 mb-3">
@@ -171,14 +166,14 @@ else{
               </div>
               <div class="col-md-4">
                 <input type="number" class="form-control formInputField" id="fndamnt" name="fndamnt" min="1" step="0.01" required>
-                <div id="emailHelp" class="form-text ms-3">Minimum deposit $1</div>
+                <div id="fndamntHelp" class="form-text ms-3">Minimum deposit $1</div>
               </div>
             </div>
             <div class="row ps-3 mb-3">
               <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
                 <label class="dashFormLabel">Fee in Taka(BDT):</label>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 
                 <div class="input-group mb-3">
                   <input type="number" class="form-control formInputField" id="fndfee" name="fndfee" aria-describedby="basic-addon2" disabled>
@@ -191,10 +186,21 @@ else{
               <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
                 <label class="dashFormLabel">Total Amount to be paid(BDT):</label>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <div class="input-group mb-3">
                     <input type="number" class="form-control formInputField" id="fndamntBDT" name="fndamntBDT" aria-describedby="basic-addon3" disabled>
                     <span class="input-group-text" id="basic-addon3">BDT</span>
+                </div>
+              </div>
+
+            </div>
+            <div class="row ps-3 mb-3">
+              <div class="col-md-3 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                <label class="dashFormLabel">Your Bkash/Nagad Number (From where you sent money):</label>
+              </div>
+              <div class="col-md-4">
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control formInputField" id="senderNo" name="senderNo" min="01111111111" max="01999999999" required>
                 </div>
               </div>
 
@@ -221,10 +227,8 @@ else{
           </div>
         </div>
         <div class="row mt-4">
-          <div class="col-md-12 border border-3">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo doloribus corrupti alias nemo fuga iusto
-            impedit magni dolores, perferendis eaque reiciendis, distinctio quia. Nam veritatis unde, nesciunt ipsa nemo
-            at.
+          <div class="col-md-12 border border-3 paymentInstruction">
+            
           </div>
         </div>
 
@@ -316,6 +320,7 @@ else{
   <script src="./js/addFundSettings.js"></script>
   <script src="./js/selectWithImage.js"></script>
   <script src="./js/all.js"></script>
+  <script src="./js/addFund.js"></script>
 </body>
 
 </html>

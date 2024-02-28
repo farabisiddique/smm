@@ -42,13 +42,12 @@ function addOrderThruApi($apiId,$lnk,$qty){
                        'quantity' => $qty
                        ]);
 
-    // $apiResponse ='{"order": 23501}';  
-  // Example response from api After calling the order() function from the api functions
 
     $orderId = $apiResponse->order;
 
     return $orderId;
 }
+
 function addOrderToTable($user, $oApiId, $oLink, $oServiceId, $oQty, $oCharge, $oStatus, $conn) {
     // Prepare an insert statement
     $sql = "INSERT INTO orders (order_user_id, order_api_id, order_link, order_service_id, order_qty, order_charge, order_status) VALUES (?, ?, ?, ?, ?, ?, ?)";

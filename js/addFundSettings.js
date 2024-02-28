@@ -10,9 +10,10 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(data) {
                 var dollaRate = data.dollarRate;
-                var tnxFee = amountInUSD * 15;
-                var amountInBDT = (amountInUSD * dollaRate) + tnxFee;
-                $('#fndfee').val(tnxFee);
+                var txnFee = amountInUSD * 15;
+                var amountInBDT = (amountInUSD * dollaRate) + txnFee;
+                amountInBDT = Math.ceil(amountInBDT);
+                $('#fndfee').val(txnFee);
                 $('#fndamntBDT').val(amountInBDT);
             },
             error: function(jqXHR, textStatus, errorThrown) {
