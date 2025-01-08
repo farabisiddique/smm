@@ -67,6 +67,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 // Collect the form data
                 var username = $('#username').val();
                 var password = $('#password').val();
+                
 
                 // Send the data using AJAX to your PHP processing script
                 $.ajax({
@@ -77,7 +78,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                         password: password
                     },
                     success: function(response) {
-                      
+                        console.log(response);
                       var jsonData = JSON.parse(response);
 
                         if (jsonData.success == 1) {

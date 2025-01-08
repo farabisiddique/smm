@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 02, 2025 at 03:53 PM
+-- Generation Time: Jan 08, 2025 at 04:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,6 +34,13 @@ CREATE TABLE `admin` (
   `password` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`admin_id`, `user_full_name`, `username`, `password`) VALUES
+(1, 'Earshadul Bari Siddique', 'farabi', '123');
+
 -- --------------------------------------------------------
 
 --
@@ -43,6 +50,7 @@ CREATE TABLE `admin` (
 CREATE TABLE `admin_tokens` (
   `admin_token_id` int(11) NOT NULL,
   `token` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `expires_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -77,6 +85,13 @@ CREATE TABLE `payment_methods` (
   `pm_no` int(11) NOT NULL,
   `pm_logo` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `payment_methods`
+--
+
+INSERT INTO `payment_methods` (`pm_id`, `pm_name`, `pm_no`, `pm_logo`) VALUES
+(1, 'bKash', 1868338693, './img/bkash_logo.png');
 
 -- --------------------------------------------------------
 
@@ -128,6 +143,13 @@ CREATE TABLE `site_settings` (
   `dollar_rate` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
+--
+-- Dumping data for table `site_settings`
+--
+
+INSERT INTO `site_settings` (`setting_id`, `dollar_rate`) VALUES
+(1, 122);
+
 -- --------------------------------------------------------
 
 --
@@ -159,8 +181,9 @@ INSERT INTO `user` (`user_id`, `user_name`, `user_email`, `user_pass`, `user_bal
 --
 
 CREATE TABLE `user_tokens` (
-  `user_id` int(11) NOT NULL,
+  `user_token_id` int(11) NOT NULL,
   `token` text NOT NULL,
+  `user_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `expires_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
@@ -227,7 +250,7 @@ ALTER TABLE `user`
 -- Indexes for table `user_tokens`
 --
 ALTER TABLE `user_tokens`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_token_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -237,13 +260,13 @@ ALTER TABLE `user_tokens`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `admin_tokens`
 --
 ALTER TABLE `admin_tokens`
-  MODIFY `admin_token_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `admin_token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -255,7 +278,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
-  MODIFY `pm_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `pm_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `services`
@@ -279,7 +302,7 @@ ALTER TABLE `service_subcategory`
 -- AUTO_INCREMENT for table `site_settings`
 --
 ALTER TABLE `site_settings`
-  MODIFY `setting_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `setting_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -291,7 +314,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_tokens`
 --
 ALTER TABLE `user_tokens`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

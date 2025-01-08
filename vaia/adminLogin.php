@@ -28,11 +28,13 @@ function validateUser($username,$pass,$conn){
 
 // Retrieve data from AJAX request
 $username = $_POST['username'];
-$password = $_POST['password']; // In real scenarios, you should hash and verify this password
+$password = $_POST['password']; 
+
 
 
 // Assume a user validation function exists and returns a user_id if successful
 $validation = validateUser($username, $password,$conn); // Implement this function based on your auth system
+
 
 if ($validation[1]) {
     session_start();

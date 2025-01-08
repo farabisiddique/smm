@@ -1,6 +1,8 @@
 <?php
 
-include 'envAPI.php';
+// include '../envAPI.php';
+include __DIR__ . '/../envAPI.php';
+
 
 class Api
 {

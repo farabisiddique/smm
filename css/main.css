@@ -5,7 +5,7 @@
 
 @font-face {
   font-family: Ranmor;
-  src: url('../fonts/ranmor/Ranmor.ttf');
+  src: url('../fonts/ranmor/Ranmor.woff2');
 }
 
 @keyframes bounce {

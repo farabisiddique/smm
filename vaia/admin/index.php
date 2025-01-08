@@ -30,6 +30,7 @@ function getSiteSettings($conn){
 
 function getNoOfUsers(){
   
+  
 }
 
 
@@ -233,7 +234,7 @@ else{
             <a href="./index.php" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                Dashboard?
+                Dashboard
                 
               </p>
             </a>
@@ -289,7 +290,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>150</h3>
+                <h3>0</h3>
 
                 <p>New Orders</p>
               </div>
@@ -304,7 +305,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>53</h3>
+                <h3>0</h3>
 
                 <p>Total Orders Till Now</p>
               </div>
@@ -319,7 +320,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>44</h3>
+                <h3>0</h3>
 
                 <p>Total Users</p>
               </div>
@@ -349,7 +350,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>&#2547;<span class="amountEarned">65</span></h3>
+                <h3>&#2547;<span class="amountEarned">0</span></h3>
 
                 <p>Anount Deposited Till Now</p>
               </div>
@@ -364,7 +365,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>&#2547;<span class="amountEarned">65</span></h3>
+                <h3>&#2547;<span class="amountEarned">0</span></h3>
 
                 <p>Anount Deposited This Month</p>
               </div>
@@ -379,7 +380,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>&#2547;<span class="amountEarned">65</span></h3>
+                <h3>&#2547;<span class="amountEarned">0</span></h3>
 
                 <p>Anount Deposited This Week</p>
               </div>
@@ -394,7 +395,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>&#2547;<span class="amountEarned">65</span></h3>
+                <h3>&#2547;<span class="amountEarned">0</span></h3>
 
                 <p>Withdrawn Amount</p>
               </div>

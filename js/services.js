@@ -39,9 +39,15 @@ $(".serviceBox").click(function(){
     var servicecatid = $(this).data("servicecat");
 
     $(".serviceRow").each(function() {
-        if ($(this).data("servicecatid") != servicecatid) {
-            $(this).hide();
-        } else {
+
+        if(servicecatid != 100){
+            if ($(this).data("servicecatid") != servicecatid) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        }
+        else{
             $(this).show();
         }
     });

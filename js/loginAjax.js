@@ -8,7 +8,7 @@ $(document).ready(function() {
         var email = $('#email').val();
         var password = $('#password').val();
         var rememberMe = $('#rememberMe').is(':checked') ? 1 : 0; // Check if 'Keep me logged in' is checked
-
+        
         // Send the data using AJAX to your PHP processing script
         $.ajax({
             type: "POST",
@@ -19,8 +19,9 @@ $(document).ready(function() {
                 rememberMe: rememberMe
             },
             success: function(response) {
-              
+                console.log(response);
               var jsonData = JSON.parse(response);
+              
               
                 if (jsonData.success == 1) {
                     window.location.href = "dashboard.php";
