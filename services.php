@@ -22,12 +22,12 @@ function beautifulVarDump($var, $indent = 0) {
 
 function getAllServicesFromAPI() {
   $api = new Api();
-  $api_services = $api->services(); 
+  $api_services = $api->services();
 
   $keyword_map = [
       'Facebook' => 1,
-      'Tiktok' => 2,
-      'Youtube' => 3,
+      'TikTok' => 2,
+      'YouTube' => 3,
       'Instagram' => 4,
   ];
 
@@ -35,45 +35,24 @@ function getAllServicesFromAPI() {
   $api_services = array_map(function($service) use ($keyword_map) {
       $service->cat_id = 0; // Default cat_id if no keyword matches
 
-      // Check for keywords in the category
+      // Check for keywords in the category (case-insensitive)
       foreach ($keyword_map as $keyword => $cat_id) {
-          if (strpos($service->category, $keyword) !== false) {
+          if (stripos($service->category, $keyword) !== false) {
               $service->cat_id = $cat_id;
               break; // Stop checking once a match is found
           }
       }
       return $service;
   }, $api_services);
-  return $api_services; 
+
+  return $api_services;
 }
+
 
 
 // beautifulVarDump(getAllServicesFromAPI());
 // die();
 
-
-
-function get_services_by_ids($ids,$newProperties) {
-    $api = new Api();
-    $api_services = $api->services(); 
-    $matched_services = []; 
-
-    foreach($api_services as $service) {
-        $service_id = $service->service;
-        if(($key = array_search($service_id, $ids)) !== false) {
-            foreach($newProperties as $properties) {
-                if($properties['service_api_id'] == $service_id) {
-                    foreach($properties as $property => $value) {
-                        $service->$property = $value; 
-                    }
-                    break; 
-                }
-            }
-            $matched_services[] = $service; 
-        }
-    }
-    return $matched_services; 
-}
 
 if (isset($_COOKIE['rememberMe'])) {
     $token = $_COOKIE['rememberMe'];
@@ -85,7 +64,6 @@ if (isset($_COOKIE['rememberMe'])) {
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
         $userid = $user['user_id'];
-        // Log the user in by setting session variables, etc.
         session_start();
         $_SESSION['user_id'] = $userid;
 
@@ -99,26 +77,10 @@ if (isset($_COOKIE['rememberMe'])) {
             $userHere = $userResult->fetch_assoc();
             $username = $userHere['user_name'];
             $balance = $userHere['user_balance'];
+            $finalServices = getAllServicesFromAPI();
 
         }
 
-        $servicesResult = $conn->query("SELECT * FROM services 
-                                    JOIN service_category ON services.service_cat_id = service_category.service_category_id 
-                                    JOIN service_subcategory ON services.service_subcat_id = service_subcategory.service_subcategory_id");
-
-
-        $allServices = array();
-        $allServiceIds = array();
-        if ($servicesResult->num_rows >0) {
-            while( $servicesRow = $servicesResult->fetch_assoc() ){
-                array_push($allServices, $servicesRow);
-                array_push($allServiceIds, $servicesRow['service_api_id']);
-            }
-        }
-
-      // $finalServices = get_services_by_ids($allServiceIds,$allServices);
-      $finalServices = getAllServicesFromAPI();
-      
       
       
 
@@ -273,7 +235,7 @@ else{
             </div>
           </div>
         </div>
-      </div>
+      </div>  
     </div>
     <div class="row ps-3 mb-5">
         <table class="table table-striped  serviceTable">

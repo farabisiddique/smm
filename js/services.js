@@ -34,9 +34,10 @@ $(".placeOrder").click(function () {
 });
 
 $(".serviceBox").click(function(){
-    $(this).addClass("serviceBoxActive");
+    $(this).addClass("serviceBoxActive"); 
     $(".serviceBox").not(this).removeClass("serviceBoxActive");
     var servicecatid = $(this).data("servicecat");
+    console.log("servicecatid is " + servicecatid);
 
     $(".serviceRow").each(function() {
 

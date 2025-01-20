@@ -1,18 +1,22 @@
 <?php 
 
 include './db.php'; // Your database connection file
+
 if (isset($_COOKIE['rememberMe'])) {
     $token = $_COOKIE['rememberMe'];
     $findToken = $conn->prepare("SELECT user_id FROM user_tokens WHERE token = ? AND expires_at > NOW()");
     $findToken->bind_param("s", $token);
     $findToken->execute();
     $result = $findToken->get_result();
+    
 
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
         // Log the user in by setting session variables, etc.
+        
         session_start();
         $_SESSION['user_id'] = $user['user_id'];
+        
         // Redirect the user to the dashboard or desired page
         header("Location: dashboard.php"); 
         

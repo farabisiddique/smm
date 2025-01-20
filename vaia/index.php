@@ -44,6 +44,7 @@ if (isset($_COOKIE['adminCookie'])) {
                 <input type="text" class="form-control" id="username" name="username" required>
             </div>
             <div class="mb-3">
+                <div class="text-danger loginHelpText"></div>
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
@@ -78,14 +79,13 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                         password: password
                     },
                     success: function(response) {
-                        console.log(response);
                       var jsonData = JSON.parse(response);
 
                         if (jsonData.success == 1) {
                             window.location.href = "./admin/index.php";
                         } else {
 
-                            // $(".loginHelpText").html("Wrong Email or Password. Please try again.");
+                            $(".loginHelpText").html("Wrong Email or Password. Please try again.");
                         }
                     }
                 });

@@ -3,6 +3,23 @@
 include '../db.php';
 include '../functions.php';
 
+function beautifulVarDump($var, $indent = 0) {
+  $indentation = str_repeat('&nbsp;', $indent * 4);
+  $type = gettype($var);
+
+  echo $indentation . '<span style="color: blue;">' . $type . '</span>';
+
+  if ($type == 'array' || $type == 'object') {
+      echo ' (<span style="color: green;">' . count((array)$var) . '</span>)<br>';
+      foreach ((array)$var as $key => $value) {
+          echo $indentation . '&nbsp;&nbsp;&nbsp;&nbsp;<strong>' . $key . '</strong>: ';
+          beautifulVarDump($value, $indent + 1);
+      }
+  } else {
+      echo ' <span style="color: red;">' . htmlspecialchars(print_r($var, true)) . '</span><br>';
+  }
+}
+
 function getAPIbalance(){
     $api = new Api();
     $balance = $api->balance()->balance;
@@ -28,10 +45,61 @@ function getSiteSettings($conn){
     return $resultArray;
 }
 
-function getNoOfUsers(){
-  
-  
+function getNoOfUsers($conn) {
+  // Query to count the total number of users
+  $query = "SELECT COUNT(*) AS total_users FROM user";
+
+  // Execute the query
+  if ($result = $conn->query($query)) {
+      $row = $result->fetch_assoc();
+      $result->free(); // Free the result set
+
+      // Return the total number of users
+      return $row['total_users'];
+  } else {
+      // Handle query error
+      return "Error: " . $conn->error;
+  }
 }
+
+
+function getOrderStatistics($conn) {
+  // Single query to get counts for each status and total orders
+  $query = "
+      SELECT 
+          SUM(CASE WHEN order_status = 'Pending' THEN 1 ELSE 0 END) AS pending_orders,
+          SUM(CASE WHEN order_status = 'Processing' THEN 1 ELSE 0 END) AS processing_orders,
+          SUM(CASE WHEN order_status = 'Completed' THEN 1 ELSE 0 END) AS completed_orders,
+          SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
+          COUNT(*) AS total_orders
+      FROM orders";
+
+  // Execute the query
+  if ($result = $conn->query($query)) {
+      $row = $result->fetch_assoc();
+      $result->free(); // Free the result set
+
+      // Return the results
+      return [
+          'pending_orders' => $row['pending_orders'],
+          'processing_orders' => $row['processing_orders'],
+          'completed_orders' => $row['completed_orders'],
+          'cancelled_orders' => $row['cancelled_orders'],
+          'total_orders' => $row['total_orders'],
+      ];
+  } else {
+      // Handle query error
+      return [
+          'error' => 'Database error: ' . $conn->error,
+      ];
+  }
+}
+
+
+$orderStatistics = getOrderStatistics($conn);
+
+
+
 
 
 if (isset($_COOKIE['adminCookie'])) {
@@ -109,6 +177,7 @@ else{
   <link rel="stylesheet" href="./plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="./plugins/summernote/summernote-bs4.min.css">
+  
 
   <link rel="stylesheet" href="./style.css">
 </head>
@@ -290,9 +359,54 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>0</h3>
+                <h3><?php echo $orderStatistics['pending_orders'];  ?></h3>
 
-                <p>New Orders</p>
+                <p>Pending Orders</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3><?php echo $orderStatistics['processing_orders'];  ?></h3>
+
+                <p>Processing Orders</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3><?php echo $orderStatistics['completed_orders'];  ?></h3>
+
+                <p>Completed Orders</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3><?php echo $orderStatistics['cancelled_orders'];  ?></h3>
+
+                <p>Cancelled Orders</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -305,7 +419,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>0</h3>
+                <h3><?php echo $orderStatistics['total_orders'];  ?></h3>
 
                 <p>Total Orders Till Now</p>
               </div>
@@ -320,7 +434,7 @@ else{
             <!-- small box -->
             <div class="small-box bg-dark">
               <div class="inner">
-                <h3>0</h3>
+                <h3><?php echo getNoOfUsers($conn);  ?></h3>
 
                 <p>Total Users</p>
               </div>
@@ -352,7 +466,7 @@ else{
               <div class="inner">
                 <h3>&#2547;<span class="amountEarned">0</span></h3>
 
-                <p>Anount Deposited Till Now</p>
+                <p>Amount Deposited Till Now</p>
               </div>
               <div class="icon">
                 <i class="ion ion-cash"></i>
@@ -367,7 +481,7 @@ else{
               <div class="inner">
                 <h3>&#2547;<span class="amountEarned">0</span></h3>
 
-                <p>Anount Deposited This Month</p>
+                <p>Amount Deposited This Month</p>
               </div>
               <div class="icon">
                 <i class="ion ion-cash"></i>
@@ -382,7 +496,7 @@ else{
               <div class="inner">
                 <h3>&#2547;<span class="amountEarned">0</span></h3>
 
-                <p>Anount Deposited This Week</p>
+                <p>Amount Deposited This Week</p>
               </div>
               <div class="icon">
                 <i class="ion ion-cash"></i>
@@ -474,5 +588,6 @@ else{
 
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="./dist/js/pages/dashboard.js"></script>
+<!-- <script src="./plugins/summernote/summernote-bs4.min.js"></script>    -->
 </body>
 </html>

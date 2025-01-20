@@ -1,5 +1,4 @@
 <?php
-// include './env.php';
 include __DIR__ . '/./env.php';
 $servername = HOSTNAME;
 $dbusername = DB_USER;
