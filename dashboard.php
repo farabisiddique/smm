@@ -249,7 +249,7 @@ else{
           </div>
           <div class="col-md-6">
             <select class="form-select formInputField dashSelect" id="orderSubCtgry" name="orderSubCtgry">
-                    <option value="">Select a Category</option>
+                    <!-- <option value="">Select a Category</option> -->
                     <?php 
                         $categories = [];
                         foreach ($finalServices as $aService) {
